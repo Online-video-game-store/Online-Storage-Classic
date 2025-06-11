@@ -1,0 +1,31 @@
+server:
+  port: 7777
+
+spring:
+  application:
+    name: "EUREKA-SERVER"
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://127.0.0.1:7777/eureka}
+    register-with-eureka: false   # чтобы не регистрировал сам себя
+    fetch-registry: false
+  server:
+    eviction-interval-timer-in-ms: 5000
+
+#eureka:
+#  instance:
+#    leaseRenewalIntervalInSeconds: 5      # как часто сервис будет отправлять "пульс" Eureka
+#    leaseExpirationDurationInSeconds: 15  # время истечения "пульса" до снятия регистрации
+#  client:
+#    registryFetchIntervalSeconds: 5       # интервал обновления информации о других сервисах
+
+#logging:
+#  level:
+#    org:
+#      springframework: DEBUG
