@@ -1,0 +1,7 @@
+mr\demonid\osc\commons\dto\catalog\CatalogReserveRequest.class
+mr\demonid\osc\commons\dto\PageDTO.class
+mr\demonid\osc\commons\dto\catalog\ProductTransferred.class
+mr\demonid\osc\commons\dto\cart\CartNeededResponse.class
+mr\demonid\osc\commons\dto\ErrorResponse.class
+mr\demonid\osc\commons\dto\cart\CartItemResponse.class
+mr\demonid\osc\commons\dto\catalog\CategoryResponse.class

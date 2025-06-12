@@ -18,76 +18,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${OAUTH2_BASE_ISSUER_URI:http://localhost:8080}/realms/online-store-realm/protocol/openid-connect/certs
-        # путь до Keycloack
-        uri-base: ${OAUTH2_BASE_ISSUER_URI:http://localhost:8080}/realms/online-store-realm   # /.well-known/openid-configuration
-
-  # Cloud Bus + RabbitMQ
-  cloud:
-    function:
-      definition: channelOrderEvents;channelOrderCancel
-    stream:
-      default-binder: rabbit
-      function:
-        bindings:
-          channelOrderEvents-in-0: ch-pk8000-order-in
-          channelOrderCancel-in-0: ch-pk8000-cancel-in
-      bindings:
-        # Выходные каналы
-        ch-pk8000-order-out:
-          destination: pk8000.order.exchange  # exchange (обменник)
-          content-type: application/json
-        ch-pk8000-cancel-out:
-          destination: pk8000.cancel.exchange
-          content-type: application/json
-        # Входные каналы
-        ch-pk8000-order-in:
-          destination: pk8000.order.exchange
-          group: ${spring.application.name}-orders-group
-          content-type: application/json
-        ch-pk8000-cancel-in:
-          destination: pk8000.cancel.exchange
-          group: ${spring.application.name}-orders-group
-          content-type: application/json
-      rabbit:
-        bindings:
-          ch-pk8000-order-out:
-            producer:
-              exchange-type: direct
-              declare-exchange: true
-              routing-key-expression: "headers['routingKey']"
-          ch-pk8000-cancel-out:
-            producer:
-              exchange-type: direct
-              declare-exchange: true
-              routing-key-expression: "headers['routingKey']"
-          # Входные каналы
-          ch-pk8000-order-in:
-            consumer:
-              exchange-type: direct
-              declare-exchange: true
-              auto-bind-dlq: true
-#              republish-to-dlq: true
-#              dlq-ttl: 86400000                # 24 часа
-#              dead-letter-exchange: dlx.orders
-              binding-routing-key-delimiter: ","
-              binding-routing-key: "order.created,payment.paid"
-          ch-pk8000-cancel-in:
-            consumer:
-              exchange-type: direct
-              declare-exchange: true
-              auto-bind-dlq: true
-#              republish-to-dlq: true
-#              dlq-ttl: 86400000                 # 24 часа
-#              dead-letter-exchange: dlx.orders
-              binding-routing-key-delimiter: ","
-              binding-routing-key: "payment.cancel,order.stop"
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
-
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8090} # сервер аутентификации
 
   # SQL database
   datasource:
@@ -112,9 +43,8 @@ spring:
   sql:
     init:
       mode: never           # не нужен
-#      mode: always
-#      schema-locations: classpath:schema.sql
-
+  #      mode: always
+  #      schema-locations: classpath:schema.sql
 
 
 # настройки Эврики

@@ -1,9 +1,9 @@
-package mr.demonid.service.catalog.dto.events;
+package mr.demonid.osc.commons.dto.catalog;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mr.demonid.service.catalog.dto.CartItemResponse;
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CatalogReserveRequestEvent {
+public class CatalogReserveRequest {
     private UUID orderId;
     private UUID userId;
     private Long paymentId;

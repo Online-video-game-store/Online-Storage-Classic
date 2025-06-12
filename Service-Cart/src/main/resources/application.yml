@@ -11,7 +11,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${OAUTH2_BASE_ISSUER_URI:http://localhost:8080}/realms/online-store-realm/protocol/openid-connect/certs
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8090} # сервер аутентификации
 
   cloud:
     loadbalancer:

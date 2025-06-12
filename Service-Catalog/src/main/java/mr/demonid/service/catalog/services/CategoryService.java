@@ -1,9 +1,9 @@
 package mr.demonid.service.catalog.services;
 
 import lombok.AllArgsConstructor;
+import mr.demonid.osc.commons.dto.catalog.CategoryResponse;
 import mr.demonid.service.catalog.domain.ProductCategoryEntity;
 import mr.demonid.service.catalog.repositories.CategoryRepository;
-import mr.demonid.store.commons.dto.CategoryResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

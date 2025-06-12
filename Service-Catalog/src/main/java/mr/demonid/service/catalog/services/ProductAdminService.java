@@ -12,7 +12,7 @@ import mr.demonid.service.catalog.exceptions.*;
 import mr.demonid.service.catalog.repositories.CategoryRepository;
 import mr.demonid.service.catalog.repositories.ProductRepository;
 import mr.demonid.service.catalog.services.filters.ProductSpecification;
-import mr.demonid.service.catalog.utils.Converts;
+import mr.demonid.service.catalog.utils.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +38,7 @@ public class ProductAdminService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final Converts converts;
+    private final Mappers mappers;
 
     @Value("${app.images-path}")
     private String imagesPath;
@@ -51,7 +51,7 @@ public class ProductAdminService {
     @Transactional(readOnly = true)
     public Page<ProductResponse> getAllProducts(ProduceFilter produceFilter, Pageable pageable) {
         Page<ProductEntity> items = productRepository.findAll(ProductSpecification.filter(produceFilter, true), pageable);
-        return items.map(converts::entityToProductResponse);
+        return items.map(mappers::entityToProductResponse);
     }
 
     /**
@@ -68,7 +68,7 @@ public class ProductAdminService {
             if (category == null) {
                 throw new Exception("Неверная категория товара");
             }
-            ProductEntity productEntity = converts.requestProductToEntity(product, category);
+            ProductEntity productEntity = mappers.requestProductToEntity(product, category);
             productRepository.save(productEntity);
         } catch (Exception e) {
             throw new CreateProductException(e.getMessage());

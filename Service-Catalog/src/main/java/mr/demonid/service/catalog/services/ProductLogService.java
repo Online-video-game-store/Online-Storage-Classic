@@ -7,7 +7,7 @@ import mr.demonid.service.catalog.domain.ReservationStatus;
 import mr.demonid.service.catalog.domain.ReservedProductEntity;
 import mr.demonid.service.catalog.dto.ProductLogResponse;
 import mr.demonid.service.catalog.repositories.ProductLogRepository;
-import mr.demonid.service.catalog.utils.Converts;
+import mr.demonid.service.catalog.utils.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class ProductLogService {
 
     private ProductLogRepository productLogRepository;
     private ProductService productService;
-    private Converts converts;
+    private Mappers mappers;
 
 
     public void store(List<ReservedProductEntity> products, ReservationStatus status) {
@@ -51,7 +51,7 @@ public class ProductLogService {
     public List<ProductLogResponse> getProductsOnOrderId(UUID orderId) {
         List<ProductLogEntity> products = productLogRepository.findByOrderId(orderId).orElse(null);
         if (products != null) {
-            return products.stream().map(converts::productLogToResponse).toList();
+            return products.stream().map(mappers::productLogToResponse).toList();
         }
         return List.of();
     }

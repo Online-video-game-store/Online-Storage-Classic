@@ -1,6 +1,6 @@
 package mr.demonid.service.catalog.exceptions;
 
-import mr.demonid.service.catalog.dto.CartNeededResponse;
+import mr.demonid.osc.commons.dto.cart.CartNeededResponse;
 
 import java.util.List;
 

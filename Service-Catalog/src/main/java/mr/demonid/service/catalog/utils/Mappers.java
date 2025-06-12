@@ -7,12 +7,9 @@ import mr.demonid.service.catalog.domain.ProductLogEntity;
 import mr.demonid.service.catalog.dto.ProductLogResponse;
 import mr.demonid.service.catalog.dto.ProductRequest;
 import mr.demonid.service.catalog.dto.ProductResponse;
-import mr.demonid.service.catalog.dto.events.CatalogReserveRequestEvent;
-import mr.demonid.service.catalog.dto.events.PaymentRequestEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,21 +17,10 @@ import java.util.function.Predicate;
 
 
 @Service
-public class Converts {
+public class Mappers {
 
     @Value("${app.images-url}")
     private String imagesUrl;
-
-
-    public PaymentRequestEvent createdToPayment(CatalogReserveRequestEvent event) {
-        return new PaymentRequestEvent(
-                event.getOrderId(),
-                event.getUserId(),
-                event.getPaymentId(),
-                event.getCardId(),
-                event.getTotalAmount()
-        );
-    }
 
 
     public ProductResponse entityToProductResponse(ProductEntity entity) {

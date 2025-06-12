@@ -1,4 +1,4 @@
-package mr.demonid.service.catalog.dto.events;
+package mr.demonid.osc.commons.dto.catalog;
 
 
 import lombok.AllArgsConstructor;

@@ -2,18 +2,20 @@ package mr.demonid.service.catalog.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import mr.demonid.service.catalog.domain.ReservationStatus;
 import mr.demonid.service.catalog.domain.ReservedProductEntity;
 import mr.demonid.service.catalog.domain.ProductEntity;
-import mr.demonid.service.catalog.dto.CartItemResponse;
-import mr.demonid.service.catalog.dto.CartNeededResponse;
-import mr.demonid.service.catalog.dto.events.ProductTransferred;
 import mr.demonid.service.catalog.exceptions.CatalogException;
 import mr.demonid.service.catalog.exceptions.NotAvailableException;
 import mr.demonid.service.catalog.repositories.ProductRepository;
 import mr.demonid.service.catalog.repositories.ReservedProductRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
+import mr.demonid.osc.commons.dto.cart.CartNeededResponse;
+import mr.demonid.osc.commons.dto.catalog.ProductTransferred;
 
 import java.util.ArrayList;
 import java.util.List;

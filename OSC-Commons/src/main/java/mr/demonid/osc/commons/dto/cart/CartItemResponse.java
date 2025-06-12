@@ -1,4 +1,4 @@
-package mr.demonid.service.catalog.dto;
+package mr.demonid.osc.commons.dto.cart;
 
 
 import lombok.AllArgsConstructor;

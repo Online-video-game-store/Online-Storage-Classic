@@ -1,4 +1,5 @@
-package mr.demonid.service.catalog.dto;
+package mr.demonid.osc.commons.dto.catalog;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartNeededResponse {
-    private Long productId;
+public class CategoryResponse {
+    private Long id;
     private String name;
-    private int request;
-    private int stock;
+    private String description;
 }
