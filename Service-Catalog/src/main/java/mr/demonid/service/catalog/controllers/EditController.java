@@ -2,13 +2,13 @@ package mr.demonid.service.catalog.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.dto.PageDTO;
 import mr.demonid.service.catalog.dto.ProduceFilter;
 import mr.demonid.service.catalog.dto.ProductLogResponse;
 import mr.demonid.service.catalog.dto.ProductRequest;
 import mr.demonid.service.catalog.dto.ProductResponse;
 import mr.demonid.service.catalog.services.ProductAdminService;
 import mr.demonid.service.catalog.services.ProductLogService;
-import mr.demonid.store.commons.dto.PageDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
