@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/Service-Cart/pom.xml" />
         <option value="$PROJECT_DIR$/OSC-Commons/pom.xml" />
         <option value="$PROJECT_DIR$/Service-Catalog/pom.xml" />
+        <option value="$PROJECT_DIR$/Web-client/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -1,0 +1,92 @@
+.status-approved {
+    color: green;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: red;
+    font-weight: bold;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 25px 30px;
+    margin: auto;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal h2 {
+    margin-top: 0;
+    font-size: 22px;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.close-button {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+#productTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+#productTable th,
+#productTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+#productTable thead {
+    background-color: #83a89b;
+}
+
+#productTable tbody tr:hover {
+    background-color: #fafaff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+
+.product-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.product-list-table th, .product-list-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/css/heder.css}">
+    <link rel="stylesheet" th:href="@{/css/left-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/product.css}">
+    <link rel="stylesheet" th:href="@{/css/pagination.css}">
+    <link rel="stylesheet" th:href="@{/css/notification.css}">
+    <link rel="stylesheet" th:href="@{/css/cart-popup.css}">
+    <link rel="stylesheet" th:href="@{/css/product-model.css}">
+    <script th:src="@{js/add-to-cart.js}"></script>
+    <script th:src="@{js/cart-popup.js}"></script>
+    <script th:src="@{js/web-socket.js}"></script>
+    <script th:src="@{js/product-popup.js}"></script>
+</head>
+
+<body>
+
+<div class="header">
+    <div class="page-title">Игры для ПК8000</div>
+    <div class="user-info">
+        <div th:if="${isAuthenticated}">
+            <span th:text="'Привет, ' + ${username} + '!'">Привет, Гость!</span>
+        </div>
+        <div th:if="${isAdmin}">
+            <a th:href="@{/pk8000/catalog/index/setup}" class="login-button">Управление</a>
+        </div>
+        <div th:if="${isAdmin}">
+            <a th:href="@{/pk8000/catalog/index/statistics}" class="login-button">Статистика</a>
+        </div>
+        <div th:if="${isAuthenticated}">
+            <a th:href="@{/logout}" class="logout-button">Выход</a>
+        </div>
+        <div th:if="${!isAuthenticated}">
+            <a th:href="@{/oauth2/authorization/online-store-client-id}" class="login-button">Вход</a>
+        </div>
+
+        <!-- Корзина -->
+        <div class="cart">
+            <a th:href="@{/cart}" class="cart-link">
+                🛒 Корзина
+                <span class="cart-count" th:text="${cartItemCount}">0</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Боковая панель с категориями -->
+    <div class="sidebar">
+        <div class="categories">
+            <div th:each="category : ${categories}"
+                 class="category-button"
+                 th:classappend="${category.name == currentCategory} ? 'active-category' : ''"
+                 th:data-category-id="${category.id}"
+                 onclick="redirectToCategory(this)">
+                <span th:text="${category.name}"></span>
+            </div>
+        </div>
+
+        <!-- Фильтр товаров -->
+        <div class="filter">
+            <h3>Фильтр товаров</h3>
+            <input type="text" th:value="${productName}" id="productName" placeholder="Имя товара" class="filter-input">
+            <input type="number" th:value="${minPrice}" id="minPrice" placeholder="Мин. цена" min="0" class="filter-input">
+            <input type="number" th:value="${maxPrice}" id="maxPrice" placeholder="Макс. цена" min="0" class="filter-input">
+            <button onclick="redirectToCategory()" class="filter-button">Применить</button>
+        </div>
+    </div>
+    <!-- Контент товаров -->
+    <main class="content">
+        <div class="product-grid">
+            <div th:each="product : ${products}" class="product-item" th:data-name="${product.name}" th:data-price="${product.price}">
+                <div class="product-title" th:text="${product.name}">Product Name</div>
+                <div class="product-image-container">
+                    <div class="image-wrapper">
+                        <img th:each="imgUrl, iterStat : ${product.imageUrls}"
+                             th:src="@{${imgUrl}}"
+                             class="product-image"
+                             th:classappend="${iterStat.index != 0} ? ' hidden' : ''"
+                             alt="Product image" />
+<!--                        <div class="zoom-icon">&#128269;</div> &lt;!&ndash; Unicode иконка лупы &ndash;&gt;-->
+                    </div>
+                </div>
+                <div class="product-description" th:text="${product.description}">Product description...</div>
+                <div class="product-price" th:text="'$' + ${product.price}">Price</div>
+                <form>
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <div class="quantity-controls">
+                        <button type="button" onclick="decreaseQuantity(this)">-</button>
+                        <input type="number" name="quantity" value="1" min="1" class="quantity-input" style="width: 50px; text-align: center;" />
+                        <button type="button" onclick="increaseQuantity(this)">+</button>
+                    </div>
+                    <button type="button" class="buy-button">В корзину</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<div class="pagination-container">
+    <!-- Пагинатор. Для отправки данных тек. страницы и фильтра, применяем скрытые поля форм -->
+    <div class="pagination" th:with="startPage=${currentPage > 5 ? currentPage - 5 : 0},
+                                     endPage=${totalPages > currentPage + 5 ? currentPage + 5 : totalPages - 1}">
+        <ul>
+            <!-- Кнопка "Previous" -->
+            <li th:if="${currentPage > 0}">
+                <form th:action="@{/pk8000/catalog/index}" method="get" style="display: inline;">
+                    <input type="hidden" name="elemsOfPage" th:value="${elemsOfPage}">
+                    <input type="hidden" name="pageNo" th:value="${currentPage - 1}">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <button type="submit" class="pagination-button">Previous</button>
+                </form>
+            </li>
+
+            <!-- Номера страниц -->
+            <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <form th:action="@{/pk8000/catalog/index}" method="get" style="display: inline;">
+                    <input type="hidden" name="elemsOfPage" th:value="${elemsOfPage}">
+                    <input type="hidden" name="pageNo" th:value="${i}">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <button type="submit"
+                            class="pagination-button"
+                            th:classappend="${currentPage == i} ? 'active' : ''"
+                            th:text="${i + 1}">
+                    </button>
+                </form>
+            </li>
+
+            <!-- Кнопка "Next" -->
+            <li th:if="${currentPage < totalPages - 1}">
+                <form th:action="@{/pk8000/catalog/index}" method="get" style="display: inline;">
+                    <input type="hidden" name="elemsOfPage" th:value="${elemsOfPage}">
+                    <input type="hidden" name="pageNo" th:value="${currentPage + 1}">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <button type="submit" class="pagination-button">Next</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<!-- Всплывающее окно корзины -->
+<div id="cart-popup" class="cart-popup">
+    <div class="cart-popup-content">
+        <span class="close-button">&times;</span>
+        <h2>Ваша корзина</h2>
+
+        <div class="cart-items">
+            <!-- Товары добавляются динамически через JS -->
+        </div>
+
+        <div class="cart-total">
+            <strong>Итого:</strong> <span>$0.00</span>
+        </div>
+        <button class="checkout-button">Оплатить</button>
+    </div>
+</div>
+
+<!-- Модальное окно с подробностями товара -->
+<div id="product-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+
+        <div class="modal-image-wrapper">
+            <div class="modal-image-container">
+                <img id="modal-image" class="modal-image" src="" alt="Product">
+            </div>
+            <button id="prev-image" class="nav-button">&#10094;</button>
+            <button id="next-image" class="nav-button">&#10095;</button>
+        </div>
+        <div class="modal-info">
+            <h2 id="modal-title">Название</h2>
+            <p class="price" id="modal-price">Цена</p>
+            <p class="category" id="modal-category">Категория</p>
+            <p id="modal-description">Описание товара</p>
+<!--            <button class="add-to-cart">В корзину</button>-->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function redirectToCategory(element = null) {
+        const selectedCategory = element ? element : document.querySelector('.category-button.active-category');
+        const categoryId = selectedCategory ? selectedCategory.getAttribute("data-category-id") : '';
+
+        const productName = document.getElementById("productName").value;
+        const minPrice = document.getElementById("minPrice").value;
+        const maxPrice = document.getElementById("maxPrice").value;
+        const elemsOfPage = 8;
+        const pageNo = 0;
+
+        const queryParams = new URLSearchParams({
+            categoryId,
+            elemsOfPage,
+            pageNo,
+            productName,
+            minPrice,
+            maxPrice
+        });
+        window.location.href = `/pk8000/catalog/index?${queryParams.toString()}`;
+    }
+
+    function increaseQuantity(button) {
+        const quantityInput = button.parentElement.querySelector('.quantity-input');
+        let currentQuantity = parseInt(quantityInput.value);
+        quantityInput.value = currentQuantity + 1;
+    }
+
+    function decreaseQuantity(button) {
+        const quantityInput = button.parentElement.querySelector('.quantity-input');
+        let currentQuantity = parseInt(quantityInput.value);
+        if (currentQuantity > 1) {                          // Проверка на минимальное значение
+            quantityInput.value = currentQuantity - 1;      // Уменьшаем количество
+        }
+    }
+</script>
+
+
+</body>
+</html>

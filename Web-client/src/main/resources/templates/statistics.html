@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/css/heder.css}">
+    <link rel="stylesheet" th:href="@{/css/left-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/product.css}">
+    <link rel="stylesheet" th:href="@{/css/pagination.css}">
+    <link rel="stylesheet" th:href="@{/css/statistics.css}">
+    <script th:src="@{/js/statistics.js}"></script>
+</head>
+
+<body>
+
+<div class="header">
+    <div class="page-title">Игры для ПК8000</div>
+    <div class="user-info">
+        <div>
+            <span th:text="'Привет, ' + ${username} + '!'">Привет, Гость!</span>
+            <a th:href="@{/pk8000/catalog/index}" class="logout-button">Выход</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Боковая панель с категориями -->
+    <div class="sidebar">
+        <div class="categories">
+            <div th:each="category : ${categories}"
+                 class="category-button"
+                 th:classappend="${category.name == currentCategory} ? 'active-category' : ''"
+                 th:data-category-id="${category.id}"
+                 onclick="redirectToCategory(this)">
+                <span th:text="${category.name}"></span>
+            </div>
+        </div>
+
+        <!-- Фильтр записей -->
+        <div class="filter">
+            <h3>Фильтр товаров</h3>
+            <input type="text" th:value="${productName}" id="productName" placeholder="Имя товара" class="filter-input">
+            <div class="filter-input">
+                <label for="from">От:</label>
+                <input type="datetime-local" id="from" name="from" th:value="${from}">
+            </div>
+            <div class="filter-input">
+                <label for="to">До:</label>
+                <input type="datetime-local" id="to" name="to" th:value="${to}">
+            </div>
+            <button onclick="redirectToCategory()" class="filter-button">Применить</button>
+        </div>
+    </div>
+
+    <!-- Контент товаров -->
+    <main class="content">
+        <table class="product-table">
+            <thead>
+            <tr>
+                <th>ID заказа</th>
+                <th>ФИО клиента</th>
+                <th>Метод оплаты</th>
+                <th>Сумма</th>
+                <th>Дата создания</th>
+                <th>Статус</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="stat : ${orderStatistics}">
+                <td>
+                    <a href="#" th:text="${stat.orderId}"
+                       th:attr="data-order-id=${stat.orderId}"
+                       onclick="showProducts(this)"></a>
+                </td>
+                <td th:text="${stat.fio}"></td>
+                <td th:text="${stat.paymentMethod}"></td>
+                <td th:text="${stat.totalAmount} + ' ₽'"></td>
+                <td th:text="${#temporals.format(stat.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                <td th:text="${stat.status}"
+                    th:classappend="${stat.status == T(mr.demonid.web.client.dto.orders.OrderStatus).Approved} ? 'status-approved' : 'status-pending'">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<!-- Модальное окно для отображения товаров заказа -->
+<div id="productModal" class="modal">
+    <div class="modal-content" onclick="event.stopPropagation();">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Список товаров</h2>
+        <table id="productTable">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Количество</th>
+                <th>Цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- JS вставит строки сюда -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="pagination-container">
+    <!-- Пагинатор. Для отправки данных тек. страницы и фильтра, применяем скрытые поля форм -->
+    <div class="pagination" th:with="startPage=${currentPage > 5 ? currentPage - 5 : 0},
+                                     endPage=${totalPages > currentPage + 5 ? currentPage + 5 : totalPages - 1}">
+        <ul>
+            <!-- Кнопка "Previous" -->
+            <li th:if="${currentPage > 0}">
+                <form th:action="@{/pk8000/catalog/index/statistics}" method="get" style="display: inline;">
+                    <input type="hidden" name="elemsOfPage" th:value="${elemsOfPage}">
+                    <input type="hidden" name="pageNo" th:value="${currentPage - 1}">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <input type="hidden" name="from" th:value="${from}">
+                    <input type="hidden" name="to" th:value="${to}">
+                    <input type="hidden" name="productName" th:value="${productName}">
+                    <button type="submit" class="pagination-button">Previous</button>
+                </form>
+            </li>
+
+            <!-- Номера страниц -->
+            <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <form th:action="@{/pk8000/catalog/index/statistics}" method="get" style="display: inline;">
+                    <input type="hidden" name="elemsOfPage" th:value="${elemsOfPage}">
+                    <input type="hidden" name="pageNo" th:value="${i}">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <input type="hidden" name="from" th:value="${from}">
+                    <input type="hidden" name="to" th:value="${to}">
+                    <input type="hidden" name="productName" th:value="${productName}">
+                    <button type="submit"
+                            class="pagination-button"
+                            th:classappend="${currentPage == i} ? 'active' : ''"
+                            th:text="${i + 1}">
+                    </button>
+                </form>
+            </li>
+
+            <!-- Кнопка "Next" -->
+            <li th:if="${currentPage < totalPages - 1}">
+                <form th:action="@{/pk8000/catalog/index/statistics}" method="get" style="display: inline;">
+                    <input type="hidden" name="elemsOfPage" th:value="${elemsOfPage}">
+                    <input type="hidden" name="pageNo" th:value="${currentPage + 1}">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <input type="hidden" name="from" th:value="${from}">
+                    <input type="hidden" name="to" th:value="${to}">
+                    <input type="hidden" name="productName" th:value="${productName}">
+                    <button type="submit" class="pagination-button">Next</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

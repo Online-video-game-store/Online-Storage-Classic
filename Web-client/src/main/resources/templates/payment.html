@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оплата заказа</title>
+    <link rel="stylesheet" th:href="@{/css/payment.css}">
+    <script th:src="@{/js/payment.js}"></script>
+    <script th:src="@{/js/web-socket.js}"></script>
+</head>
+
+
+<body>
+<div class="container">
+    <h2>Оплата заказа</h2>
+
+    <h3>Выберите платежную систему:</h3>
+    <div th:each="payment : ${paymentMethods}" class="payment-option">
+        <label>
+            <input type="radio" name="paymentMethod" th:value="${payment.id}"
+                   th:data-supports-cards="${payment.supportsCards}"
+                   onchange="updatePaymentUI()">
+            <span th:text="${payment.name}"></span>
+        </label>
+    </div>
+
+    <div id="cardSection" style="display: none;">
+        <h3>Выберите карту:</h3>
+        <div th:each="card : ${userCards}">
+            <label>
+                <input type="radio" name="selectedCard" th:value="${card.cardId}">
+                <span th:text="${card.cardNumber}"></span> (до <span th:text="${card.expiry}"></span>)
+            </label>
+        </div>
+
+        <button type="button" onclick="document.getElementById('newCardForm').style.display='block'">Добавить карту</button>
+
+        <div id="newCardForm" style="display: none;">
+            <h3>Добавить карту</h3>
+            <label>Номер карты: <input type="text" id="newCardNumber" oninput="formatCardNumber(this)"></label><br>
+            <label>Дата истечения: <input type="text" id="newCardExpiry" oninput="formatExpiryDate(this)" placeholder="MM/YY"></label><br>
+            <label>CVV: <input type="text" id="newCardCvv" oninput="validateCVV(this)"></label><br>
+            <button type="button" onclick="addNewCard()">Сохранить</button>
+        </div>
+    </div>
+
+    <button type="button" onclick="processPayment()">Оплатить</button>
+</div>
+
+</body>
+</html>
