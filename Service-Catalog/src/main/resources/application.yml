@@ -1,0 +1,143 @@
+server:
+  port: ${CATALOG_SERVICE_PORT:0}
+
+
+spring:
+  application:
+    name: "CATALOG-SERVICE"
+
+  output.ansi.enabled: ALWAYS
+
+  # ограничение на размер MultipartFile файлов
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${OAUTH2_BASE_ISSUER_URI:http://localhost:8080}/realms/online-store-realm/protocol/openid-connect/certs
+        # путь до Keycloack
+        uri-base: ${OAUTH2_BASE_ISSUER_URI:http://localhost:8080}/realms/online-store-realm   # /.well-known/openid-configuration
+
+  # Cloud Bus + RabbitMQ
+  cloud:
+    function:
+      definition: channelOrderEvents;channelOrderCancel
+    stream:
+      default-binder: rabbit
+      function:
+        bindings:
+          channelOrderEvents-in-0: ch-pk8000-order-in
+          channelOrderCancel-in-0: ch-pk8000-cancel-in
+      bindings:
+        # Выходные каналы
+        ch-pk8000-order-out:
+          destination: pk8000.order.exchange  # exchange (обменник)
+          content-type: application/json
+        ch-pk8000-cancel-out:
+          destination: pk8000.cancel.exchange
+          content-type: application/json
+        # Входные каналы
+        ch-pk8000-order-in:
+          destination: pk8000.order.exchange
+          group: ${spring.application.name}-orders-group
+          content-type: application/json
+        ch-pk8000-cancel-in:
+          destination: pk8000.cancel.exchange
+          group: ${spring.application.name}-orders-group
+          content-type: application/json
+      rabbit:
+        bindings:
+          ch-pk8000-order-out:
+            producer:
+              exchange-type: direct
+              declare-exchange: true
+              routing-key-expression: "headers['routingKey']"
+          ch-pk8000-cancel-out:
+            producer:
+              exchange-type: direct
+              declare-exchange: true
+              routing-key-expression: "headers['routingKey']"
+          # Входные каналы
+          ch-pk8000-order-in:
+            consumer:
+              exchange-type: direct
+              declare-exchange: true
+              auto-bind-dlq: true
+#              republish-to-dlq: true
+#              dlq-ttl: 86400000                # 24 часа
+#              dead-letter-exchange: dlx.orders
+              binding-routing-key-delimiter: ","
+              binding-routing-key: "order.created,payment.paid"
+          ch-pk8000-cancel-in:
+            consumer:
+              exchange-type: direct
+              declare-exchange: true
+              auto-bind-dlq: true
+#              republish-to-dlq: true
+#              dlq-ttl: 86400000                 # 24 часа
+#              dead-letter-exchange: dlx.orders
+              binding-routing-key-delimiter: ","
+              binding-routing-key: "payment.cancel,order.stop"
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+
+  # SQL database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/catalog_db
+    username: admin
+    password: admin
+  # Spring Jpa Hibernate
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: false
+        format_sql: true
+        highlight_sql: true
+
+    generate-ddl: true
+    defer-datasource-initialization: true
+    open-in-view: false
+  # автозапуск скриптов 'schema.sql' и 'data.sql'
+  sql:
+    init:
+      mode: never           # не нужен
+#      mode: always
+#      schema-locations: classpath:schema.sql
+
+
+
+# настройки Эврики
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:7777/eureka}
+    register-with-eureka: true                # Регистрация клиента в Eureka Server
+    fetch-registry: true                      # Извлечение реестра из Eureka Server
+    retry-on-connect-errors: true             # Повторные подключения к Eureka при сбоях
+    registry-fetch-interval-seconds: 5        # (30)
+  instance:
+    prefer-ip-address: false                  # Использовать IP-адрес вместо имени хоста
+    lease-renewal-interval-in-seconds: 5      # Интервал отправки heartbeats (30)
+    lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)
+
+#logging:
+#  level:
+#    org.springframework.cloud.stream: DEBUG
+#    org.springframework.amqp: DEBUG
+
+# Настройка пути до изменяемых ресурсов, например картинок к товарам
+app:
+  images-path: ./datas/catalog/images
+  images-url: /pk8000/api/catalog/images
+  images-temp: ./datas/temp/images
