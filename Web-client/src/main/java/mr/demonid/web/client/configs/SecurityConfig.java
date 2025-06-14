@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Разрешаем CORS
                 .csrf(AbstractHttpConfigurer::disable)                      // Отключаем CSRF для запросов API
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/pk8000/catalog/**", "/pk8000/auth/**", "/pk8000/catalog/images/**").permitAll()  // Главная и публичные ресурсы
+                        .requestMatchers("/pk8000/api/catalog/**", "/pk8000/auth/**", "/pk8000/api/catalog/images/**").permitAll()  // Главная и публичные ресурсы
                         .anyRequest().authenticated()  // Остальные требуют аутентификации
                 )
                 .anonymous(Customizer.withDefaults()) // Включение анонимных пользователей

@@ -1,0 +1,72 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: "GATEWAY-SERVER"
+
+  output.ansi.enabled: ALWAYS
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090     # сервер аутентификации
+
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true         # Повторные попытки при сбоях балансировщика
+    gateway:
+      default-filters:
+        - TokenRelay=
+        - PreserveHostHeader
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: false
+      routes:
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/pk8000/api/catalog/**, /pk8000/api/catalog/images/**, /pk8000/api/catalog/edit/**, /pk8000/api/catalog/reservation/**
+          filters:
+            - Retry=3         # Повторить запрос до 5 раз при сбое
+        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+        - id: cart-service
+          uri: lb://CART-SERVICE
+          predicates:
+            - Path=/pk8000/api/public/cart/**
+          filters:
+            - Retry=3         # Повторить запрос до 3 раз при сбое
+
+  #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+#        - id: order-service
+#          uri: lb://ORDER-SERVICE
+#          predicates:
+#            - Path=/api/orders/**
+#          filters:
+#            - Retry=5         # Повторить запрос до 5 раз при сбое
+#        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+#        - id: payment-service
+#          uri: lb://PAYMENT-SERVICE
+#          predicates:
+#            - Path=/api/payment/**
+#          filters:
+#            - Retry=5         # Повторить запрос до 5 раз при сбое
+#        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+
+
+# настройки Эврики
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:7777/eureka}
+    register-with-eureka: true                # Регистрация клиента в Eureka Server
+    fetch-registry: true                      # Извлечение реестра из Eureka Server
+    retry-on-connect-errors: true             # Повторные подключения к Eureka при сбоях
+    registry-fetch-interval-seconds: 5        # (30)
+  instance:
+    prefer-ip-address: false                  # Использовать IP-адрес вместо имени хоста
+    lease-renewal-interval-in-seconds: 5      # Интервал отправки heartbeats (30)
+    lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)

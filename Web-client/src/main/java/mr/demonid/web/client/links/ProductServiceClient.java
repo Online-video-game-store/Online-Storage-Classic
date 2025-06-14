@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-@FeignClient(name = "CATALOG-SERVICE", configuration = FeignClientConfig.class)
+@FeignClient(name = "CATALOG-SERVICE", url = "http://localhost:9010")
 // имя сервиса, под которым он зарегистрирован в Eureka
 public interface ProductServiceClient {
 
