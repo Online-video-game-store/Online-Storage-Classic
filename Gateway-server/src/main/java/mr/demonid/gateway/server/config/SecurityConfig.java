@@ -34,8 +34,9 @@ public class SecurityConfig {
         http
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(
-                                "/pk8000/api/catalog/**",
-                                "/auth/**"
+                                "/pk8000/api/catalog/products/**",
+                                "/pk8000/api/catalog/images/**",
+                                "/pk8000/api/public/cart/**"
                         ).permitAll()                               // разрешаем доступ к эндпоинтам аутентификации
                         .anyExchange().authenticated()              // остальные запросы требуют аутентификации
                 )

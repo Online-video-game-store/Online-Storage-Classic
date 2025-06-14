@@ -16,8 +16,8 @@ spring:
         issuer-url: ${OAUTH2_ISSUER_URI:http://localhost:8090}
         jwk-set-uri: ${OAUTH2_JWK_URI:http://localhost:8090/oauth2/jwks}
         client-urls:
-          - http://web-client:8080/login/oauth2/code/apm-client
           - http://127.0.0.1:8080/login/oauth2/code/apm-client
+          - http://127.0.0.1:9000/login/oauth2/code/apm-client
           - http://192.168.1.179:8080/login/oauth2/code/apm-client
           - http://192.168.1.4:8080/login/oauth2/code/apm-client
           - http://192.168.1.*:8080/login/oauth2/code/apm-client

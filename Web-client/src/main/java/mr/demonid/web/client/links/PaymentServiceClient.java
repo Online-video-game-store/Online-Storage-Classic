@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "PAYMENT-SERVICE", configuration = FeignClientConfig.class)
+@FeignClient(name = "PAYMENT-SERVICE", url = "http://localhost:9010")
 public interface PaymentServiceClient {
 
     @GetMapping("/pk8000/api/payment/get-payments")

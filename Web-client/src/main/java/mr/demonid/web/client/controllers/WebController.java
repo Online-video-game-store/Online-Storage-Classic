@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import mr.demonid.osc.commons.dto.PageDTO;
 import mr.demonid.osc.commons.dto.catalog.CategoryResponse;
+import mr.demonid.web.client.configs.AppConfiguration;
 import mr.demonid.web.client.dto.filters.ProductFilter;
 import mr.demonid.web.client.dto.ProductResponse;
 import mr.demonid.web.client.services.CartServices;
 import mr.demonid.web.client.services.ProductServices;
 import mr.demonid.web.client.utils.IdnUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,6 +30,7 @@ import java.util.Objects;
 @RequestMapping("/pk8000/catalog")
 public class WebController {
 
+    private AppConfiguration appConfiguration;
     private ProductServices productServices;
     private CartServices cartServices;
 
@@ -46,6 +49,7 @@ public class WebController {
         maxPrice = normalizePrice(maxPrice);
         productName = normalizeProductName(productName);
 
+        log.info("-- index start");
         List<String> scopes = IdnUtil.getCurrentUserAuthorities();
         boolean isAuthenticated = IdnUtil.isAuthenticated();
 
@@ -120,7 +124,19 @@ public class WebController {
      */
     private void setPageModel(Model model, PageDTO<ProductResponse> page, int pageSize, String productName, BigDecimal minPrice, BigDecimal maxPrice) {
         // Задаем выборку очередной страницы
-        model.addAttribute("products", page.getContent());
+        List<ProductResponse> products = page.getContent();
+        String gateway = appConfiguration.getGatewayUrl();
+        List<ProductResponse> normalized = products.stream()
+                .peek(p -> {
+                    List<String> fixedUrls = p.getImageUrls().stream()
+                            .map(url -> url.replace("\\", "/"))
+                            .map(url -> gateway + url)
+                            .toList();
+
+                    p.setImageUrls(fixedUrls);
+                })
+                .toList();
+        model.addAttribute("products", normalized);
 
         // корректируем данные о страницах
         model.addAttribute("totalPages", page.getTotalPages());

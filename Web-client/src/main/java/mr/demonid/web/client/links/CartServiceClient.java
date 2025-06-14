@@ -1,6 +1,5 @@
 package mr.demonid.web.client.links;
 
-import mr.demonid.web.client.configs.FeignClientConfig;
 import mr.demonid.web.client.dto.CartItemResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "CART-SERVICE", configuration = FeignClientConfig.class)      // имя сервиса, под которым он зарегистрирован в Eureka
+@FeignClient(name = "CART-SERVICE", url = "http://localhost:9010")      // имя сервиса, под которым он зарегистрирован в Eureka
 public interface CartServiceClient {
 
     @PostMapping("/pk8000/api/public/cart/add")

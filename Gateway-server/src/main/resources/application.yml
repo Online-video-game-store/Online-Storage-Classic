@@ -29,7 +29,7 @@ spring:
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
-            - Path=/pk8000/api/catalog/**, /pk8000/api/catalog/images/**, /pk8000/api/catalog/edit/**, /pk8000/api/catalog/reservation/**
+            - Path=/pk8000/api/catalog/**
           filters:
             - Retry=3         # Повторить запрос до 5 раз при сбое
         #            - RemoveRequestHeader=Authorization   # удаляем исходный токен

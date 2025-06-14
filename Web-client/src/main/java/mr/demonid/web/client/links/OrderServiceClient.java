@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "ORDER-SERVICE", configuration = FeignClientConfig.class)
+@FeignClient(name = "ORDER-SERVICE", url = "http://localhost:9010")
 public interface OrderServiceClient {
 
     @PostMapping("/pk8000/api/order/create-order")

@@ -18,8 +18,9 @@ spring:
       client:
         provider:
           spring:
-            issuer-uri: http://localhost:8090
-            jwk-set-uri: http://localhost:8090/oauth2/jwks
+            issuer-uri: ${app.config.auth-server-url}
+          apm-client:
+            user-name-attribute: sub
         registration:
           apm-client:
             provider: spring
@@ -27,25 +28,30 @@ spring:
             client-secret: "secret"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
-            redirect-uri: "http://127.0.0.1:8080//login/oauth2/code/apm-client"
+            redirect-uri: ${OAUTH2_REDIRECT_URI:{baseUrl}/login/oauth2/code/{registrationId}}
             scope:
-              - user.read
-              - user.write
               - openid
 
-# настройки Эврики
-eureka:
-  client:
-    service-url:
-      defaultZone: ${EUREKA_SERVER_URL:http://localhost:7777/eureka}
-    register-with-eureka: true                # Регистрация клиента в Eureka Server
-    fetch-registry: true                      # Извлечение реестра из Eureka Server
-    retry-on-connect-errors: true             # Повторные подключения к Eureka при сбоях
-    registry-fetch-interval-seconds: 5        # (30)
-  instance:
-    prefer-ip-address: false                  # Использовать IP-адрес вместо имени хоста
-    lease-renewal-interval-in-seconds: 5      # Интервал отправки heartbeats (30)
-    lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)
+# Настройки приложения
+app:
+  config:
+    gateway-url: ${GATEWAY_SERVER_URL:http://localhost:9010}
+    auth-server-url: ${OAUTH2_ISSUER_URI:http://localhost:8090}
+
+
+## настройки Эврики
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_URL:http://localhost:7777/eureka}
+#    register-with-eureka: true                # Регистрация клиента в Eureka Server
+#    fetch-registry: true                      # Извлечение реестра из Eureka Server
+#    retry-on-connect-errors: true             # Повторные подключения к Eureka при сбоях
+#    registry-fetch-interval-seconds: 5        # (30)
+#  instance:
+#    prefer-ip-address: false                  # Использовать IP-адрес вместо имени хоста
+#    lease-renewal-interval-in-seconds: 5      # Интервал отправки heartbeats (30)
+#    lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)
 
 #logging:
 #  level:
@@ -55,3 +61,4 @@ eureka:
 #    org.springframework.security.jwt: DEBUG
 #    org.springframework.security.oauth2.client: DEBUG
 #    org.springframework.security.oauth2.core: DEBUG
+#    org.springframework.security.web.savedrequest: DEBUG

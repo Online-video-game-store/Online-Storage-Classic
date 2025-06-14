@@ -34,17 +34,7 @@ public class AuthController {
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response) {
         log.info("-->> login");
-        Cookie anonCookie = IdnUtil.getCookie(COOKIE_NAME, request.getCookies());
-        if (anonCookie != null) {
-            // Переносим данные из анонимного контекста в авторизованный
-            log.info("  -- auth from {} to {}", anonCookie.getValue(), IdnUtil.getUserId());
-            cartServices.authUser(UUID.fromString(anonCookie.getValue()), IdnUtil.getUserId());
-
-            // Удаляем куки после успешной авторизации
-            anonCookie.setMaxAge(0);
-            anonCookie.setPath("/");
-            response.addCookie(anonCookie);
-        }
+        System.out.println("Token: " + IdnUtil.getCurrentUserToken());
         return "redirect:/pk8000/catalog/index";
     }
 
@@ -53,8 +43,6 @@ public class AuthController {
      */
     @GetMapping("/logout")
     public String logout() {
-        log.info("-->> logout");
-
         return "redirect:/pk8000/catalog/index";
     }
 

@@ -3,6 +3,7 @@ package mr.demonid.web.client.configs;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +27,6 @@ import java.util.Set;
 public class SecurityConfig {
 
     private AnonymousCookieFilter anonymousCookieFilter;
-    private CustomAuthenticationSuccessHandler successHandler;
 
 
     @Bean
@@ -35,7 +35,9 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Разрешаем CORS
                 .csrf(AbstractHttpConfigurer::disable)                      // Отключаем CSRF для запросов API
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/pk8000/api/catalog/**", "/pk8000/auth/**", "/pk8000/api/catalog/images/**").permitAll()  // Главная и публичные ресурсы
+                        .requestMatchers("/pk8000/catalog/**").permitAll()  // Главная и публичные ресурсы
+                        .requestMatchers(HttpMethod.GET,"/pk8000/api/catalog/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()  // Остальные требуют аутентификации
                 )
                 .anonymous(Customizer.withDefaults()) // Включение анонимных пользователей
@@ -43,10 +45,7 @@ public class SecurityConfig {
 //                .sessionManagement(session ->
 //                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Создавать сессии (для анонимов)
 //                )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(successHandler) // подключаем свой фильтр
-                );
-//                .oauth2Login(Customizer.withDefaults()); // Настройка OAuth2 Login
+                .oauth2Login(Customizer.withDefaults()); // Настройка OAuth2 Login
         return http.build();
     }
 

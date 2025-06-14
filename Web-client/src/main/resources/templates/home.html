@@ -2,17 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Products</title>
-    <link rel="stylesheet" th:href="@{/css/heder.css}">
-    <link rel="stylesheet" th:href="@{/css/left-panel.css}">
-    <link rel="stylesheet" th:href="@{/css/product.css}">
-    <link rel="stylesheet" th:href="@{/css/pagination.css}">
-    <link rel="stylesheet" th:href="@{/css/notification.css}">
-    <link rel="stylesheet" th:href="@{/css/cart-popup.css}">
-    <link rel="stylesheet" th:href="@{/css/product-model.css}">
-    <script th:src="@{js/add-to-cart.js}"></script>
-    <script th:src="@{js/cart-popup.js}"></script>
-    <script th:src="@{js/web-socket.js}"></script>
-    <script th:src="@{js/product-popup.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/heder.css}"/>
+    <link rel="stylesheet" th:href="@{/css/left-panel.css}"/>
+    <link rel="stylesheet" th:href="@{/css/product.css}"/>
+    <link rel="stylesheet" th:href="@{/css/pagination.css}"/>
+    <link rel="stylesheet" th:href="@{/css/notification.css}"/>
+    <link rel="stylesheet" th:href="@{/css/cart-popup.css}"/>
+    <link rel="stylesheet" th:href="@{/css/product-model.css}"/>
+    <script th:src="@{/js/add-to-cart.js}"></script>
+    <script th:src="@{/js/cart-popup.js}"></script>
+    <script th:src="@{/js/web-socket.js}"></script>
+    <script th:src="@{/js/product-popup.js}"></script>
 </head>
 
 <body>
@@ -30,10 +30,10 @@
             <a th:href="@{/pk8000/catalog/index/statistics}" class="login-button">Статистика</a>
         </div>
         <div th:if="${isAuthenticated}">
-            <a th:href="@{/logout}" class="logout-button">Выход</a>
+            <a th:href="@{/pk8000/auth/logout}" class="logout-button">Выход</a>
         </div>
         <div th:if="${!isAuthenticated}">
-            <a th:href="@{/oauth2/authorization/online-store-client-id}" class="login-button">Вход</a>
+            <a th:href="@{/pk8000/auth/login}" class="login-button">Вход</a>
         </div>
 
         <!-- Корзина -->

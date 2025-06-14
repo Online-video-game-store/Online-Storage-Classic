@@ -80,6 +80,8 @@ public class SecurityConfig {
                         .authorizationGrantType(REFRESH_TOKEN)
                         .redirectUris(u -> u.addAll(properties.getClientUrls()))
                         .scope("openid")
+                        .scope("read")
+                        .scope("write")
                         .clientAuthenticationMethod(CLIENT_SECRET_BASIC)
                         .clientSettings(ClientSettings.builder()
                                 .requireAuthorizationConsent(false)      // запрос пользователя разрешения на "read", "write" и тд.
