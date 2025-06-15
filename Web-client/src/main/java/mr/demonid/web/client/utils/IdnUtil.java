@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,9 +28,9 @@ public class IdnUtil {
     public static UUID getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtToken) {
-            return UUID.fromString(jwtToken.getToken().getClaimAsString("sub"));
+            return UUID.fromString(jwtToken.getToken().getClaimAsString("user_id"));
         } else if (authentication.getPrincipal() instanceof DefaultOidcUser oidcUser) {
-            return UUID.fromString(oidcUser.getIdToken().getClaimAsString("sub"));
+            return UUID.fromString(oidcUser.getIdToken().getClaimAsString("user_id"));
         }
         return null;
     }
@@ -66,6 +67,14 @@ public class IdnUtil {
         }
         return null;
     }
+
+
+
+
+
+
+
+
 
     /**
      * Добавление куки "ANON_ID" для анонимного пользователя.

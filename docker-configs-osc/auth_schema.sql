@@ -15,7 +15,7 @@ create table if not exists scopes (
 
 -- Пользователи
 create table if not exists users (
-    id bigint not null auto_increment primary key,
+    user_id binary(16) not null primary key,
     username varchar(100) not null unique,
     password varchar(255) not null,
     email varchar(100),
@@ -25,19 +25,19 @@ create table if not exists users (
 -- Таблица связей пользователей и ролей
 create table if not exists users_roles (
     role_id bigint not null,
-    user_id bigint not null,
+    user_id binary(16) not null,
     primary key (role_id, user_id),
     constraint fk_users_roles_role foreign key (role_id) references roles (id) on delete cascade on update cascade,
-    constraint fk_users_roles_user foreign key (user_id) references users (id) on delete cascade on update cascade
+    constraint fk_users_roles_user foreign key (user_id) references users (user_id) on delete cascade on update cascade
 );
 
 -- Таблица связей пользователей и прав
 create table if not exists users_scopes (
     scope_id bigint not null,
-    user_id bigint not null,
+    user_id binary(16) not null,
     primary key (scope_id, user_id),
     constraint fk_users_scopes_scope foreign key (scope_id) references scopes (id) on delete cascade on update cascade,
-    constraint fk_users_scopes_user foreign key (user_id) references users (id) on delete cascade on update cascade
+    constraint fk_users_scopes_user foreign key (user_id) references users (user_id) on delete cascade on update cascade
 );
 
 -- Таблица для информации о клиентах (GUI и мобильное приложение)

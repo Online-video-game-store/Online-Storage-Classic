@@ -1,5 +1,6 @@
 package mr.demonid.web.client.controllers;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,16 +35,33 @@ public class AuthController {
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response) {
         log.info("-->> login");
-        System.out.println("Token: " + IdnUtil.getCurrentUserToken());
+        Cookie anonCookie = IdnUtil.getCookie(COOKIE_NAME, request.getCookies());
+        if (anonCookie != null) {
+            // Переносим данные из анонимного контекста в авторизованный
+            log.info("  -- auth from {} to {}", anonCookie.getValue(), IdnUtil.getUserId());
+            cartServices.authUser(UUID.fromString(anonCookie.getValue()), IdnUtil.getUserId());
+
+            // Удаляем куки после успешной авторизации
+            anonCookie.setMaxAge(0);
+            anonCookie.setPath("/");
+            response.addCookie(anonCookie);
+        }
         return "redirect:/pk8000/catalog/index";
     }
 
-    /**
-     * Действия после выхода пользователя из профиля.
-     */
-    @GetMapping("/logout")
-    public String logout() {
-        return "redirect:/pk8000/catalog/index";
-    }
+//    /**
+//     * Действия после выхода пользователя из профиля.
+//     */
+//    @GetMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+//        request.logout();
+//        // Дополнительно, можно очистить куки:
+//        Cookie cookie = new Cookie("ANON_ID", null);
+//        cookie.setMaxAge(0);
+//        cookie.setPath("/");
+//        response.addCookie(cookie);
+//
+//        return "redirect:/pk8000/catalog/index";
+//    }
 
 }

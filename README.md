@@ -1,34 +1,37 @@
-TODO: Заменить ID пользователей на UUID
+http://127.0.0.1:9000/pk8000/catalog/index
+
+
+TODO: Подкорректировать корзину, поля в токене.
 
 
 Header:
 {
-"kid": "7168b03c-9b1a-41e1-87a0-c46a799d797c",
+"kid": "3917c7b1-0451-4fb6-ae94-f9bd540b7805",
 "alg": "RS256"
 }
 Body:
 {
 "sub": "Andrey",
 "iss": "http://localhost:8090",
-"nonce": "fBbX_DVx2-2z86BvpF2z58yjTUtZamybL_NKhio6iME",
+"nonce": "uxFEAn1M_J47A8tEADYxpJdjJjlBKEwWSE0CahS87wE",
 "authorities": [
-    "ROLE_USER",
-    "ROLE_ADMIN"
+"ROLE_USER",
+"ROLE_ADMIN"
 ],
-"sid": "1owTZXG9gzx6_UwaVlEGr9s1nwtKLOvhGBUGCZGhPEI",
+"sid": "_MNmXmBbH-L22FQ6LBGMzaBMZI7ANUKfBwBWeyv-IOQ",
 "aud": "client",
-"user_id": "2",
+"user_id": "fc7559f3-7b92-4cc3-8051-2267b77fb6e5",
 "azp": "client",
-"auth_time": 1749934891,
+"auth_time": 1749974719,
 "scope": [
-    "openid",
-    "read",
-    "write",
-    "update",
-    "delete"
+"openid",
+"read",
+"write",
+"update",
+"delete"
 ],
-"exp": 1749936691,
-"iat": 1749934891,
-"jti": "7d50bf03-618f-4cb4-8d45-30802d3229ae",
+"exp": 1749976520,
+"iat": 1749974720,
+"jti": "34ff487d-493c-4986-b680-f525b6c0bb28",
 "email": "andnot@yandex.ru"
 }

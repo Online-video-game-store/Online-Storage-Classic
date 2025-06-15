@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Online-Storage-Classic.iml" filepath="$PROJECT_DIR$/.idea/Online-Storage-Classic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Auth-server/auth-server.iml" filepath="$PROJECT_DIR$/Auth-server/auth-server.iml" />
     </modules>
   </component>
 </project>

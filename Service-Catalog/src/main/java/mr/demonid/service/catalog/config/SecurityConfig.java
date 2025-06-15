@@ -50,6 +50,12 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+//        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+//        converter.setJwtGrantedAuthoritiesConverter(new CustomJwtAuthenticationConverter());
+//        return converter;
+//    }
     /**
      * Извлекает из полей запроса значения ROLE и SCOPE.
      */

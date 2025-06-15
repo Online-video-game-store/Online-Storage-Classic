@@ -10,10 +10,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 import java.util.HashSet;
@@ -45,8 +50,22 @@ public class SecurityConfig {
 //                .sessionManagement(session ->
 //                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Создавать сессии (для анонимов)
 //                )
-                .oauth2Login(Customizer.withDefaults()); // Настройка OAuth2 Login
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(new CustomOAuth2UserService())
+                                .oidcUserService(new CustomOidcUserService())
+                        )
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/pk8000/auth/logout")           // URL выхода
+                        .logoutSuccessUrl("/pk8000/catalog/index")  // куда редиректить после выхода
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID", "ANON_ID")     // удаляем нужные куки
+                        .clearAuthentication(true)
+                );
+//                .oauth2Login(Customizer.withDefaults()); // Настройка OAuth2 Login
         return http.build();
     }
+
 
 }

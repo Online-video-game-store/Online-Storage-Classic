@@ -14,27 +14,24 @@ values ( 'read', null ),
        ('delete', 'только для админов');
 
 
-insert IGNORE into users (username, password, email, enabled)
-values ('Operator', '$2a$12$cADt/zxBaBR4zA3uv9MBvOBbgj3g8hvHCAwCd3QKLN9JC46Ia6GL2', 'penzmash@mail.ru', true),
-       ('Andrey', '$2a$12$cADt/zxBaBR4zA3uv9MBvOBbgj3g8hvHCAwCd3QKLN9JC46Ia6GL2', 'andnot@yandex.ru', true); -- pass: q
+insert IGNORE into users (user_id, username, password, email, enabled)
+values (UNHEX('f4a89cf05a704f558e6915f7ae8547d3'), 'Operator', '$2a$12$cADt/zxBaBR4zA3uv9MBvOBbgj3g8hvHCAwCd3QKLN9JC46Ia6GL2', 'penzmash@mail.ru', true),
+       (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 'Andrey', '$2a$12$cADt/zxBaBR4zA3uv9MBvOBbgj3g8hvHCAwCd3QKLN9JC46Ia6GL2', 'andnot@yandex.ru', true); -- pass: q
 
 -- Вставка связей пользователей и ролей
 insert IGNORE into users_roles (user_id, role_id)
 values
-    (1, 1), -- Operator -> ROLE_USER
-    (2, 1), -- Andrey -> ROLE_USER
-    (2, 2); -- Andrey -> ROLE_ADMIN
+    (UNHEX('f4a89cf05a704f558e6915f7ae8547d3'), 1), -- Operator -> ROLE_USER
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 1), -- Andrey -> ROLE_USER
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 2); -- Andrey -> ROLE_ADMIN
+
 
 -- Вставка связей пользователей и прав
 insert IGNORE into users_scopes (user_id, scope_id)
 values
-    (1, 1), -- Operator -> read
-    (1, 2), -- Operator -> write
-    (2, 1), -- Andrey -> read
-    (2, 2), -- Andrey -> write
-    (2, 3), -- Andrey -> update
-    (2, 4); -- Andrey -> delete
-
-
-
-
+    (UNHEX('f4a89cf05a704f558e6915f7ae8547d3'), 1), -- Operator -> read
+    (UNHEX('f4a89cf05a704f558e6915f7ae8547d3'), 2), -- Operator -> write
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 1), -- Andrey -> read
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 2), -- Andrey -> write
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 3), -- Andrey -> update
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 4); -- Andrey -> delete
