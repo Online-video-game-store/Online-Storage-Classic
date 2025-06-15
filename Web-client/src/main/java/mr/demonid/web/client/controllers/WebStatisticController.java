@@ -32,7 +32,7 @@ public class WebStatisticController {
     private ProductServices productServices;
     private OrderService orderService;
     private PaymentService paymentService;
-//    private KeycloakUserService keycloakUserService;
+    private IdnUtil idnUtil;
 
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DEVELOPER')")
@@ -48,7 +48,7 @@ public class WebStatisticController {
 
         productName = normalizeProductName(productName);
 
-        model.addAttribute("username", IdnUtil.isAuthenticated() ? IdnUtil.getUserName() : "Хьюстон");
+        model.addAttribute("username", idnUtil.isAuthenticated() ? idnUtil.getUserName() : "Хьюстон");
         model.addAttribute("from", from);
         model.addAttribute("to", to);
         model.addAttribute("productName", productName);
@@ -75,7 +75,7 @@ public class WebStatisticController {
     }
 
     private String getUserName(UUID userId) {
-        String user = IdnUtil.getUserName();
+        String user = idnUtil.getUserName();
         return user == null ? "Unknown" : user;
     }
 

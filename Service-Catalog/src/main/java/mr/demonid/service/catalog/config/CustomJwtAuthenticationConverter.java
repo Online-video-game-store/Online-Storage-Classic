@@ -1,23 +1,22 @@
 package mr.demonid.service.catalog.config;
 
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 public class CustomJwtAuthenticationConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
     private final JwtGrantedAuthoritiesConverter delegate = new JwtGrantedAuthoritiesConverter();
+
 
     public CustomJwtAuthenticationConverter() {
         delegate.setAuthorityPrefix("SCOPE_");

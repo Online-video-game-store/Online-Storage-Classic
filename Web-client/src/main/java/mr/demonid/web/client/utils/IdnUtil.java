@@ -3,11 +3,14 @@ package mr.demonid.web.client.utils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import mr.demonid.web.client.configs.AppConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,9 +18,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Component
+@AllArgsConstructor
 public class IdnUtil {
 
-    public static boolean isAuthenticated() {
+    private AppConfiguration config;
+
+
+    public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal());
     }
@@ -25,23 +33,23 @@ public class IdnUtil {
     /**
      * Возвращает идентификатор авторизированного пользователя.
      */
-    public static UUID getUserId() {
+    public UUID getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtToken) {
-            return UUID.fromString(jwtToken.getToken().getClaimAsString("user_id"));
+            return UUID.fromString(jwtToken.getToken().getClaimAsString(config.getClaimUserId()));
         } else if (authentication.getPrincipal() instanceof DefaultOidcUser oidcUser) {
-            return UUID.fromString(oidcUser.getIdToken().getClaimAsString("user_id"));
+            return UUID.fromString(oidcUser.getIdToken().getClaimAsString(config.getClaimUserId()));
         }
         return null;
     }
 
-    public static String getUserName() {
+    public String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication == null ? null : authentication.getName();
     }
 
 
-    public static Cookie getCookie(String name, Cookie[] cookies) {
+    public Cookie getCookie(String name, Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (name.equals(cookie.getName())) {
@@ -56,11 +64,11 @@ public class IdnUtil {
      * Возвращает идентификатор анонимного пользователя, которого
      * ранее пометили в куки.
      */
-    public static String getAnonymousId(HttpServletRequest request) {
+    public String getAnonymousId(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             return Arrays.stream(cookies)
-                    .filter(cookie -> "ANON_ID".equals(cookie.getName()))
+                    .filter(cookie -> config.getCookieAnonId().equals(cookie.getName()))
                     .map(Cookie::getValue)
                     .findFirst()
                     .orElse(null);
@@ -68,21 +76,13 @@ public class IdnUtil {
         return null;
     }
 
-
-
-
-
-
-
-
-
     /**
      * Добавление куки "ANON_ID" для анонимного пользователя.
      * Но лучше это делать через фильтры (как и реализовано
      * в этом клиенте).
      */
-    public static Cookie setAnonymousCookie(HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = new Cookie("ANON_ID", UUID.randomUUID().toString());
+    public Cookie setAnonymousCookie(HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = new Cookie(config.getCookieAnonId(), UUID.randomUUID().toString());
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setSecure(request.isSecure());
@@ -96,7 +96,7 @@ public class IdnUtil {
      *
      * @return Строка токена, или null - если пользователь не аутентифицирован.
      */
-    public static String getCurrentUserToken() {
+    public String getCurrentUserToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtToken) {
             return jwtToken.getToken().getTokenValue();
@@ -109,7 +109,7 @@ public class IdnUtil {
     /**
      * Возвращает список прав текущего пользователя.
      */
-    public static List<String> getCurrentUserAuthorities() {
+    public List<String> getCurrentUserAuthorities() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return List.of();

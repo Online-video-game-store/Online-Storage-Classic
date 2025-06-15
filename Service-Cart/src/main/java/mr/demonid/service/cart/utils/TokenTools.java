@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.service.cart.config.AppConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,9 @@ import java.util.UUID;
 @Log4j2
 public class TokenTools {
 
+    private AppConfig config;
+
+
     /**
      * Проверяет, является ли текущий пользователь анонимом.
      */
@@ -28,16 +32,18 @@ public class TokenTools {
     }
 
     /**
-     * Возвращает ID пользователя из поля "sub" Jwt-Токена.
+     * Возвращает ID пользователя из Jwt-Токена.
      */
     public UUID getUserIdFromToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             log.info("  -- user name = {}", authentication.getName());
             Jwt jwt = (Jwt) authentication.getPrincipal();
-            return UUID.fromString(jwt.getClaim("sub"));
+            try {
+                return UUID.fromString(jwt.getClaim(config.getClaimUserId()));
+            } catch (Exception ignored) {}
         }
-        log.info("  -- user name = null");
+        log.error("Can't extract user ID");
         return null;
     }
 
@@ -48,7 +54,7 @@ public class TokenTools {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             return Arrays.stream(cookies)
-                    .filter(cookie -> "ANON_ID".equals(cookie.getName()))
+                    .filter(cookie -> config.getCookieAnonId().equals(cookie.getName()))
                     .map(e -> UUID.fromString(e.getValue()))
                     .findFirst()
                     .orElse(null);

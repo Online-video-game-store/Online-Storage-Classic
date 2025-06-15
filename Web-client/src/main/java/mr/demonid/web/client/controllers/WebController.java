@@ -33,6 +33,7 @@ public class WebController {
     private AppConfiguration appConfiguration;
     private ProductServices productServices;
     private CartServices cartServices;
+    private IdnUtil idnUtil;
 
 
     @GetMapping("/index")
@@ -50,11 +51,11 @@ public class WebController {
         productName = normalizeProductName(productName);
 
         log.info("-- index start");
-        List<String> scopes = IdnUtil.getCurrentUserAuthorities();
-        boolean isAuthenticated = IdnUtil.isAuthenticated();
+        List<String> scopes = idnUtil.getCurrentUserAuthorities();
+        boolean isAuthenticated = idnUtil.isAuthenticated();
 
         model.addAttribute("isAuthenticated", isAuthenticated);
-        model.addAttribute("username", isAuthenticated ? IdnUtil.getUserName() : null);
+        model.addAttribute("username", isAuthenticated ? idnUtil.getUserName() : null);
         model.addAttribute("isAdmin", scopes.contains("ROLE_ADMIN") || scopes.contains("ROLE_DEVELOPER"));
         model.addAttribute("cartItemCount", cartServices.getCountItems());
 
@@ -85,7 +86,7 @@ public class WebController {
         maxPrice = normalizePrice(maxPrice);
         productName = normalizeProductName(productName);
 
-        model.addAttribute("username", IdnUtil.isAuthenticated() ? IdnUtil.getUserName() : "Хьюстон");
+        model.addAttribute("username", idnUtil.isAuthenticated() ? idnUtil.getUserName() : "Хьюстон");
 
         setCategories(model, categoryId);
 

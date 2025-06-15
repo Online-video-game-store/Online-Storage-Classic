@@ -20,20 +20,6 @@ spring:
       healthCheck:
         enabled: true                        # включение проверки состояния для сервисов
 
-# настройки Эврики
-eureka:
-  client:
-    service-url:
-      defaultZone: ${EUREKA_SERVER_URL:http://localhost:7777/eureka}
-    register-with-eureka: true                # Регистрация клиента в Eureka Server
-    fetch-registry: true                      # Извлечение реестра из Eureka Server
-    retry-on-connect-errors: true             # Повторные подключения к Eureka при сбоях
-    registry-fetch-interval-seconds: 5        # (30)
-  instance:
-    prefer-ip-address: false                  # Использовать IP-адрес вместо имени хоста
-    lease-renewal-interval-in-seconds: 5      # Интервал отправки heartbeats (30)
-    lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)
-
   # H2 database
   datasource:
     driver-class-name: org.h2.Driver
@@ -65,6 +51,26 @@ eureka:
     generate-ddl: true
 #    defer-datasource-initialization: true
 #    open-in-view: false
+
+app:
+  config:
+    cookie-anon-id: ${ANON_ID_CLAIM:ANON_ID}    # в этом поле куки хранят ID не аутентифицированного пользователя
+    claim-user-id: ${USER-ID-CLAIM:user_id}     # поле в токене, хранящее ID пользователя
+
+
+# настройки Эврики
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:7777/eureka}
+    register-with-eureka: true                # Регистрация клиента в Eureka Server
+    fetch-registry: true                      # Извлечение реестра из Eureka Server
+    retry-on-connect-errors: true             # Повторные подключения к Eureka при сбоях
+    registry-fetch-interval-seconds: 5        # (30)
+  instance:
+    prefer-ip-address: false                  # Использовать IP-адрес вместо имени хоста
+    lease-renewal-interval-in-seconds: 5      # Интервал отправки heartbeats (30)
+    lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)
 
 #logging:
 #  level:

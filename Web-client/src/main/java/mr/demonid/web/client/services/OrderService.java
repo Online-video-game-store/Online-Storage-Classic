@@ -29,6 +29,7 @@ public class OrderService {
 
     private CartServices cartServices;
     private OrderServiceClient orderServiceClient;
+    private IdnUtil idnUtil;
 
 
     public ResponseEntity<?> createOrder(PaymentRequest request) {
@@ -37,7 +38,7 @@ public class OrderService {
         if (request.getPaymentMethodId() == null) {
             throw new CreateOrderException("Выберите платежную систему");
         }
-        UUID userId = IdnUtil.getUserId();
+        UUID userId = idnUtil.getUserId();
         if (userId == null) {
             throw new CreateOrderException("Нет активного пользователя");
         }

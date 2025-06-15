@@ -16,6 +16,12 @@ import java.io.IOException;
 @Log4j2
 public class AnonymousCookieFilter extends OncePerRequestFilter {
 
+    private final IdnUtil idnUtil;
+
+    public AnonymousCookieFilter(IdnUtil idnUtil) {
+        this.idnUtil = idnUtil;
+    }
+
     /**
      * Вставляет во входящие запросы куки, идентифицирующие
      * анонимных пользователей.
@@ -24,11 +30,11 @@ public class AnonymousCookieFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // Проверяем наличие cookie и если его нет, то создаем.
-        if (IdnUtil.getAnonymousId(request) == null) {
-            Cookie cookie = IdnUtil.setAnonymousCookie(request, response);
+        if (idnUtil.getAnonymousId(request) == null) {
+            Cookie cookie = idnUtil.setAnonymousCookie(request, response);
             log.info("-- Cookie created: {}", cookie.getValue());
-        } else {
-            log.info("-- Cookie already exists: {}", IdnUtil.getAnonymousId(request));
+//        } else {
+//            log.info("-- Cookie already exists: {}", idnUtil.getAnonymousId(request));
         }
 
         filterChain.doFilter(request, response);

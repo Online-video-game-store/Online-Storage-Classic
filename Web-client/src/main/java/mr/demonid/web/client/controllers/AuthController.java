@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.web.client.configs.AppConfiguration;
 import mr.demonid.web.client.links.CartServiceClient;
 import mr.demonid.web.client.services.CartServices;
 import mr.demonid.web.client.utils.IdnUtil;
@@ -25,8 +26,9 @@ import java.util.UUID;
 public class AuthController {
 
     private CartServices cartServices;
+    private IdnUtil idnUtil;
+    private AppConfiguration config;
 
-    private static final String COOKIE_NAME = "ANON_ID";
 
     /**
      * Перенос данных анонимного пользователя в его авторизированный
@@ -35,11 +37,11 @@ public class AuthController {
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response) {
         log.info("-->> login");
-        Cookie anonCookie = IdnUtil.getCookie(COOKIE_NAME, request.getCookies());
+        Cookie anonCookie = idnUtil.getCookie(config.getCookieAnonId(), request.getCookies());
         if (anonCookie != null) {
             // Переносим данные из анонимного контекста в авторизованный
-            log.info("  -- auth from {} to {}", anonCookie.getValue(), IdnUtil.getUserId());
-            cartServices.authUser(UUID.fromString(anonCookie.getValue()), IdnUtil.getUserId());
+            log.info("  -- auth from {} to {}", anonCookie.getValue(), idnUtil.getUserId());
+            cartServices.authUser(UUID.fromString(anonCookie.getValue()), idnUtil.getUserId());
 
             // Удаляем куки после успешной авторизации
             anonCookie.setMaxAge(0);

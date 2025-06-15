@@ -18,13 +18,14 @@ import java.util.Map;
 public class ApiController {
 
     private CartServices cartServices;
+    private IdnUtil idnUtil;
 
     /**
      * Проверка аутентификации пользователя.
      */
     @GetMapping("/check")
     public ResponseEntity<Void> check() {
-        if (IdnUtil.isAuthenticated()) {
+        if (idnUtil.isAuthenticated()) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();

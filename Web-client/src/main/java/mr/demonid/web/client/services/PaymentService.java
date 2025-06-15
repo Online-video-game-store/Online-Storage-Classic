@@ -23,6 +23,7 @@ import java.util.UUID;
 public class PaymentService {
 
     private PaymentServiceClient paymentServiceClient;
+    private IdnUtil idnUtil;
 
 
     public List<PaymentMethod> getPaymentMethods() {
@@ -36,7 +37,7 @@ public class PaymentService {
 
     public List<CardResponse> getCards() {
         try {
-            UUID userId = IdnUtil.getUserId();
+            UUID userId = idnUtil.getUserId();
             if (userId != null) {
                 return paymentServiceClient.getCards(userId).getBody();
             }
@@ -50,7 +51,7 @@ public class PaymentService {
         if (cardRequest.getCardNumber().isEmpty()) {
             throw new CreateCardException("Некорректный номер карты");
         }
-        UUID userId = IdnUtil.getUserId();
+        UUID userId = idnUtil.getUserId();
         if (userId == null) {
             throw new CreateCardException("Пользователь не авторизирован");
         }

@@ -37,6 +37,8 @@ app:
   config:
     gateway-url: ${GATEWAY_SERVER_URL:http://localhost:9010}
     auth-server-url: ${OAUTH2_ISSUER_URI:http://localhost:8090}
+    cookie-anon-id: ${ANON_ID_CLAIM:ANON_ID}    # в этом поле куки хранят ID не аутентифицированного пользователя
+    claim-user-id: ${USER-ID-CLAIM:user_id}     # поле в токене, хранящее ID пользователя
 
 
 ## настройки Эврики
