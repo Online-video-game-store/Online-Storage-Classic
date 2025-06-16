@@ -24,8 +24,7 @@ public class NotAvailableException extends CatalogException {
     private void format(List<CartNeededResponse> products) {
         StringBuilder res = new StringBuilder();
         for (CartNeededResponse product : products) {
-            res.append("&")
-                    .append(product.getName())
+            res.append(product.getName())
                     .append(" [требуется: ").append(product.getRequest())
                     .append(", в наличии: ").append(product.getStock())
                     .append("]");

@@ -58,6 +58,7 @@ public class OrderService {
         try {
             return orderServiceClient.createOrder(order);
         } catch (FeignException e) {
+            System.out.println("feign exception...");
             return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Order-Service");
         }
     }

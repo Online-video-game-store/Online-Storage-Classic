@@ -56,7 +56,10 @@ public class PaymentController {
     @ResponseBody
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest request) {
         log.info("== processPayment: {}", request);
-        return orderService.createOrder(request);
+        ResponseEntity<?> res = orderService.createOrder(request);
+        System.out.println("res = " + res.getBody());
+        return res;
+//        return orderService.createOrder(request);
     }
 
 

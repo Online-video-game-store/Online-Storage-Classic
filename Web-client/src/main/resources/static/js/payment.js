@@ -47,7 +47,8 @@ async function processPayment() {
     const selectedCard = document.querySelector('input[name="selectedCard"]:checked');
 
     if (!selectedPayment) {
-        alert("Выберите платежную систему");
+        showToast("❗ Выберите платежную систему", "error");
+        // alert("Выберите платежную систему");
         return;
     }
 
@@ -63,14 +64,21 @@ async function processPayment() {
             body: JSON.stringify(paymentData)
         });
         if (response.ok) {
-            window.location.href = "/pk8000/catalog/index";
+            showToast("✅ Заказ успешно оформлен!", "success");
+            setTimeout(() => {
+                window.location.href = "/pk8000/catalog/index";
+            }, 1500); // задержка для показа сообщения
         } else {
             const error = await response.json();
-            alert(error.message || "Произошла ошибка при обработке платежа");
+            showToast("❌ " + (error.message || "Произошла ошибка при оформлении заказа"), "error");
+            // alert(error.message || "Произошла ошибка при обработке платежа");
         }
     } catch (e) {
         // Сетевые ошибки или проблемы с JSON
         console.error("Ошибка запроса на создание заказа:", e);
-        alert("Не удалось связаться с сервером.");
+        showToast("❌ Не удалось связаться с сервером", "error");
+        // alert("Не удалось связаться с сервером.");
+    } finally {
+        showLoading(false);
     }
 }

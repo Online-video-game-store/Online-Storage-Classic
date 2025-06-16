@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <title>Оплата заказа</title>
     <link rel="stylesheet" th:href="@{/css/payment.css}">
+    <script th:src="@{/js/toast.js}"></script>
     <script th:src="@{/js/payment.js}"></script>
-    <script th:src="@{/js/web-socket.js}"></script>
 </head>
 
 
 <body>
+<div th:insert="~{fragments/ui :: alerts}"></div>
+
 <div class="container">
     <h2>Оплата заказа</h2>
 
