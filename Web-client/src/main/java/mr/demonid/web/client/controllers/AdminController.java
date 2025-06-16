@@ -3,16 +3,20 @@ package mr.demonid.web.client.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.dto.PageDTO;
 import mr.demonid.osc.commons.dto.catalog.ProductResponse;
+import mr.demonid.web.client.configs.AppConfiguration;
 import mr.demonid.web.client.dto.ProductRequest;
 import mr.demonid.web.client.dto.logs.ProductLogResponse;
 import mr.demonid.web.client.services.ProductServices;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +27,7 @@ import java.util.UUID;
 public class AdminController {
 
     private ProductServices productServices;
+    private AppConfiguration appConfiguration;
 
 
     /**
@@ -63,8 +68,14 @@ public class AdminController {
         if (res == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(res.getImageUrls());
+        String gateway = appConfiguration.getGatewayUrl();
+        List<String> fixedUrl = res.getImageUrls().stream()
+                .map(url -> url.replace("\\", "/"))
+                .map(url -> gateway + url)
+                .toList();
+        return ResponseEntity.ok(fixedUrl);
     }
+
 
     /**
      * Загрузка на сервер нового изображения, или замена старому.

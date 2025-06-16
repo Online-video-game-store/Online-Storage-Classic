@@ -1,23 +1,36 @@
 package mr.demonid.service.order.utils;
 
 
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
+import mr.demonid.osc.commons.dto.catalog.CatalogReserveRequest;
+import mr.demonid.osc.commons.dto.payment.PaymentRequest;
 import mr.demonid.service.order.domain.Order;
 import mr.demonid.service.order.dto.OrderResponse;
-
-import java.util.UUID;
+import mr.demonid.service.order.saga.SagaContext;
 
 public class Converts {
 
-//    public static CatalogReserveRequestEvent makeOrderCreatedEvent(UUID orderId, OrderCreateRequest request) {
-//        return new CatalogReserveRequestEvent(
-//                orderId,
-//                request.getUserId(),
-//                request.getPaymentId(),
-//                request.getCardId(),
-//                request.getTotalAmount(),
-//                request.getItems().stream().map(e -> e).toList()
-//        );
-//    }
+
+    public static CatalogReserveRequest sagaToCatalogReserveRequest(SagaContext context) {
+        return new CatalogReserveRequest(
+                context.getOrderId(),
+                context.getUserId(),
+                context.getPaymentId(),
+                context.getCardId(),
+                context.getTotalAmount(),
+                context.getItems().stream().map(e -> new CartItemResponse(e.getProductId(), e.getQuantity())).toList()
+        );
+    }
+
+    public static PaymentRequest sagaToPaymentRequest(SagaContext context) {
+        return new PaymentRequest(
+                context.getOrderId(),
+                context.getUserId(),
+                context.getPaymentId(),
+                context.getCardId(),
+                context.getTotalAmount()
+        );
+    }
 
     public static OrderResponse orderToDto(Order order) {
         return  new OrderResponse(

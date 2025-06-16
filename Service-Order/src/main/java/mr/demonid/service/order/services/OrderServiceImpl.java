@@ -11,6 +11,7 @@ import mr.demonid.service.order.domain.OrderStatus;
 import mr.demonid.service.order.dto.OrderResponse;
 import mr.demonid.service.order.exceptions.CreateOrderException;
 import mr.demonid.service.order.links.CatalogServiceClient;
+import mr.demonid.service.order.links.PaymentServiceClient;
 import mr.demonid.service.order.repository.OrderRepository;
 import mr.demonid.service.order.saga.*;
 import mr.demonid.service.order.services.filters.OrderSpecifications;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
     private CatalogServiceClient catalogServiceClient;
+    private PaymentServiceClient paymentServiceClient;
 
 
     @Override
@@ -56,10 +58,10 @@ public class OrderServiceImpl implements OrderService {
 
         // Задаем последовательность действий.
         SagaOrchestrator<SagaContext> orchestrator = new SagaOrchestrator<>();
-        orchestrator.addStep(new CreateOrderStep(orderRepository, catalogServiceClient));  // Шаг 1. открываем заказ
-//        orchestrator.addStep(new ProductReservationStep(catalogServiceClient));     // резервируем товар
-//        orchestrator.addStep(new PaymentTransferStep(paymentServiceClient));        // Списываем средства в пользу магазина
-//        orchestrator.addStep(new ApprovedStep(orderRepository, catalogServiceClient)); // завершение сделки
+        orchestrator.addStep(new CreateOrderStep(orderRepository, catalogServiceClient));   // Шаг 1. Открываем заказ
+        orchestrator.addStep(new ProductReservationStep(catalogServiceClient));             // Шаг 2. Резервируем товар
+        orchestrator.addStep(new PaymentTransferStep(paymentServiceClient));        // Списываем средства в пользу магазина
+        orchestrator.addStep(new ApprovedStep(orderRepository, catalogServiceClient)); // завершение сделки
 //        orchestrator.addStep(new InformationStep(informationService));                                // оповещаем пользователя
 
         // Запускаем выполнение и возвращаем результат.

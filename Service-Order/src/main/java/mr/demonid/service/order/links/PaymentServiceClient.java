@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface PaymentServiceClient {
 
     @PostMapping("/pk8000/api/payment/transfer")
-    ResponseEntity<?> proceed(@RequestBody PaymentRequest request);
+    ResponseEntity<?> transfer(@RequestBody PaymentRequest request);
 
     @PostMapping("/pk8000/api/payment/rollback")
     ResponseEntity<?> rollback(@RequestBody UUID order);
