@@ -1,5 +1,6 @@
 package mr.demonid.gateway.server.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -25,6 +26,15 @@ import java.util.stream.Collectors;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+//    @Autowired
+//    private Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthenticationConverter;
+
+
+    @Bean
+    public Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthenticationConverter() {
+        return CustomJwtAuthenticationConverter.create();
+    }
+
     /**
      * Настройка потока безопасности (цепочки фильтров). Обрабатывает все входящие запросы.
      * @param http Объект, предоставляющий API для настройки безопасности.
@@ -42,7 +52,7 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2              // настраиваем обработку OAuth2-токенов, в данном случае Jwt
                         .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(reactiveJwtAuthenticationConverter()) // Настройка преобразователя токенов
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )
                 )
 //                // если нам не нужна централизованная полная проверка Jwt-Токенов и использование authorities в Gateway:
@@ -52,38 +62,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * Извлекает из токена список привилегий и возвращает их в виде объекта GrantedAuthority.
-     * Если дошли сюда, то токен уже проверен на подлинность через JWK или секретный ключ.
-     *
-     * После этого метода роли добавляются в SecurityContext и их можно использовать
-     * для проверки авторизации, например через аннотации:
-     * '@PreAuthorize("hasRole('USER')")'
-     * '@GetMapping("/user")' ... или на уровне фильтров доступных адресов.
-     */
-    @Bean
-    public Converter<Jwt, Mono<AbstractAuthenticationToken>> reactiveJwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter scopeConverter = new JwtGrantedAuthoritiesConverter();
-        scopeConverter.setAuthorityPrefix("SCOPE_");
-        scopeConverter.setAuthoritiesClaimName("scope");
-
-        JwtAuthenticationConverter delegate = new JwtAuthenticationConverter();
-        delegate.setJwtGrantedAuthoritiesConverter(jwt -> {
-            Set<GrantedAuthority> authorities = new HashSet<>(scopeConverter.convert(jwt));
-            List<String> roles = jwt.getClaimAsStringList("authorities");
-            if (roles != null) {
-                roles.forEach(role -> {
-                    if (role.startsWith("ROLE_")) {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    } else {
-                        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                    }
-                });
-            }
-            return authorities;
-        });
-
-        return new ReactiveJwtAuthenticationConverterAdapter(delegate);
-    }
 
 }

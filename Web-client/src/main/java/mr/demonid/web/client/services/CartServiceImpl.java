@@ -3,9 +3,9 @@ package mr.demonid.web.client.services;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
+import mr.demonid.osc.commons.dto.catalog.ProductResponse;
 import mr.demonid.web.client.dto.CartItem;
-import mr.demonid.web.client.dto.CartItemResponse;
-import mr.demonid.web.client.dto.ProductResponse;
 import mr.demonid.web.client.links.CartServiceClient;
 import mr.demonid.web.client.links.ProductServiceClient;
 import org.springframework.stereotype.Service;
@@ -60,6 +60,16 @@ public class CartServiceImpl implements CartServices {
             log.error("CartServiceImpl.getItems(): {}",e.contentUTF8().isBlank() ? e.getMessage() : e.contentUTF8());
         }
         return items;
+    }
+
+    @Override
+    public List<CartItemResponse> getSimpleItems() {
+        try {
+            return cartServiceClient.getItems().getBody();
+        } catch (FeignException e) {
+            log.error("CartServiceImpl.getSimpleItems(): {}",e.contentUTF8().isBlank() ? e.getMessage() : e.contentUTF8());
+        }
+        return List.of();
     }
 
     @Override

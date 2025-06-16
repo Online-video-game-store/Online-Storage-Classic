@@ -10,6 +10,8 @@
     <file url="file://$PROJECT_DIR$/Online-Store-Commons/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Service-Cart/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Service-Catalog/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Service-Order/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Service-Payment/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Web-client/src/main/java" charset="UTF-8" />
   </component>
 </project>

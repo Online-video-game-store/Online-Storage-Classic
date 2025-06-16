@@ -4,12 +4,12 @@ import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import mr.demonid.osc.commons.dto.PageDTO;
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
+import mr.demonid.osc.commons.dto.order.OrderCreateRequest;
 import mr.demonid.web.client.dto.CartItem;
-import mr.demonid.web.client.dto.CartItemResponse;
 import mr.demonid.web.client.dto.filters.OrderFilter;
 import mr.demonid.web.client.dto.orders.OrderResponse;
 import mr.demonid.web.client.dto.payment.PaymentRequest;
-import mr.demonid.web.client.dto.orders.OrderCreateRequest;
 import mr.demonid.web.client.exceptions.CreateOrderException;
 import mr.demonid.web.client.links.OrderServiceClient;
 import mr.demonid.web.client.utils.FeignErrorUtils;
@@ -42,10 +42,8 @@ public class OrderService {
         if (userId == null) {
             throw new CreateOrderException("Нет активного пользователя");
         }
-        // получаем товары из корзины и вычисляем общую сумму покупки
-        List<CartItem> items = cartServices.getItems();
-        List<CartItemResponse> list = items.stream().map(e -> new CartItemResponse(e.getProductId(), e.getQuantity())).toList();
-        BigDecimal totalAmount = items.stream().map(CartItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        // получаем товары из корзины
+        List<CartItemResponse> list = cartServices.getSimpleItems();
         if (list.isEmpty()) {
             throw new CreateOrderException("Корзина пуста");
         }
@@ -53,7 +51,6 @@ public class OrderService {
                 userId,
                 request.getPaymentMethodId(),
                 request.getCardId(),
-                totalAmount,
                 list
         );
         log.info("-- Order created: {}", order);

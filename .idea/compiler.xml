@@ -13,7 +13,9 @@
         <module name="web-client" />
         <module name="auth-server" />
         <module name="gateway-server" />
+        <module name="service-order" />
         <module name="eureka-server" />
+        <module name="service-payment" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -28,6 +30,8 @@
       <module name="gateway-server" options="-parameters" />
       <module name="service-cart" options="-parameters" />
       <module name="service-catalog" options="-parameters" />
+      <module name="service-order" options="-parameters" />
+      <module name="service-payment" options="-parameters" />
       <module name="web-client" options="-parameters" />
     </option>
   </component>

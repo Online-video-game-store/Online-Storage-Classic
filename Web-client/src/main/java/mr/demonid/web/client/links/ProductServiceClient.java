@@ -2,11 +2,10 @@ package mr.demonid.web.client.links;
 
 import mr.demonid.osc.commons.dto.PageDTO;
 import mr.demonid.osc.commons.dto.catalog.CategoryResponse;
-import mr.demonid.web.client.configs.FeignClientConfig;
+import mr.demonid.osc.commons.dto.catalog.ProductResponse;
 import mr.demonid.web.client.dto.filters.ProductFilter;
 import mr.demonid.web.client.dto.logs.ProductLogResponse;
 import mr.demonid.web.client.dto.ProductRequest;
-import mr.demonid.web.client.dto.ProductResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;

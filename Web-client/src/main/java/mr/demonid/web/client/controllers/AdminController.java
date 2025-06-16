@@ -3,8 +3,8 @@ package mr.demonid.web.client.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.dto.catalog.ProductResponse;
 import mr.demonid.web.client.dto.ProductRequest;
-import mr.demonid.web.client.dto.ProductResponse;
 import mr.demonid.web.client.dto.logs.ProductLogResponse;
 import mr.demonid.web.client.services.ProductServices;
 import org.springframework.http.MediaType;

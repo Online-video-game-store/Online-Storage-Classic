@@ -1,6 +1,6 @@
 package mr.demonid.web.client.links;
 
-import mr.demonid.web.client.dto.CartItemResponse;
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

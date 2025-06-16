@@ -1,7 +1,7 @@
 package mr.demonid.web.client.services;
 
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
 import mr.demonid.web.client.dto.CartItem;
-import mr.demonid.web.client.dto.CartItemResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +17,11 @@ public interface CartServices {
      * Список всех товаров в корзине текущего пользователя.
      */
     List<CartItem> getItems();
+
+    /**
+     * Список товаров без подробностей, просто ID и количество.
+     */
+    List<CartItemResponse> getSimpleItems();
 
     /**
      * Удаление товара из корзины.

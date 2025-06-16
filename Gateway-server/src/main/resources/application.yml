@@ -39,22 +39,21 @@ spring:
             - Path=/pk8000/api/public/cart/**
           filters:
             - Retry=3         # Повторить запрос до 3 раз при сбое
-
-  #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
-#        - id: order-service
-#          uri: lb://ORDER-SERVICE
-#          predicates:
-#            - Path=/api/orders/**
-#          filters:
-#            - Retry=5         # Повторить запрос до 5 раз при сбое
-#        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
-#        - id: payment-service
-#          uri: lb://PAYMENT-SERVICE
-#          predicates:
-#            - Path=/api/payment/**
-#          filters:
-#            - Retry=5         # Повторить запрос до 5 раз при сбое
-#        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+#            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/pk8000/api/order/**
+          filters:
+            - Retry=3         # Повторить запрос до 3 раз при сбое
+        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/pk8000/api/payment/**
+          filters:
+            - Retry=3         # Повторить запрос до 3 раз при сбое
+        #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
 
 
 # настройки Эврики

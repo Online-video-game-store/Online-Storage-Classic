@@ -2,6 +2,7 @@ package mr.demonid.web.client.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
 import mr.demonid.web.client.dto.*;
 import mr.demonid.web.client.services.CartServices;
 import mr.demonid.web.client.utils.IdnUtil;
