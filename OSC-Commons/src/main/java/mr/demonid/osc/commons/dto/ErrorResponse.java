@@ -16,4 +16,20 @@ public class ErrorResponse {
     private String error;               // "Bad Request"
     private String message;             // e.getMessage()
     private String path;                // request.getRequestURI()
+
+    /*
+        Проверка валидности полей.
+     */
+    public boolean isValid() {
+        return timestamp != null
+                && status >= 200
+                && status <= 600
+                && error != null
+                && !error.isBlank()
+                && message != null
+                && !message.isBlank()
+                && path != null
+                && !path.isBlank();
+    }
+
 }
