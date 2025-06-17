@@ -55,12 +55,7 @@ public class OrderService {
         );
         log.info("-- Order created: {}", order);
         // отсылаем заказ
-        try {
-            return orderServiceClient.createOrder(order);
-        } catch (FeignException e) {
-            System.out.println("feign exception...");
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Order-Service");
-        }
+        return orderServiceClient.createOrder(order);
     }
 
 
