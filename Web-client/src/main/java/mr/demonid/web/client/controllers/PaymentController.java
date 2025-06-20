@@ -55,11 +55,7 @@ public class PaymentController {
     @PostMapping("/process")
     @ResponseBody
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest request) {
-        log.info("== processPayment: {}", request);
-        ResponseEntity<?> res = orderService.createOrder(request);
-        System.out.println("res = " + res.getBody());
-        return res;
-//        return orderService.createOrder(request);
+        return orderService.createOrder(request);
     }
 
 

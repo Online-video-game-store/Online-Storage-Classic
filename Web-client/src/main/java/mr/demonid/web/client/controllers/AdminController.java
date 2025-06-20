@@ -89,7 +89,6 @@ public class AdminController {
     public ResponseEntity<?> uploadImage(@PathVariable Long id,
                                               @RequestPart("file") MultipartFile file,
                                               @RequestParam(value = "replace", required = false) String replaceFileName) {
-        System.out.println("upload product: " + id + ", " + file.getOriginalFilename() + ", replace to: " + replaceFileName);
         return productServices.uploadImage(id, file, replaceFileName);
     }
 
@@ -111,7 +110,6 @@ public class AdminController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_DEVELOPER')")
     @GetMapping("/statistics/get-products-form-order/{orderId}")
     public ResponseEntity<List<ProductLogResponse>> getProductsFormOrder(@PathVariable UUID orderId) {
-        System.out.println("getProductsFormOrder: " + orderId);
         return ResponseEntity.ok(productServices.getOrderDetails(orderId));
     }
 

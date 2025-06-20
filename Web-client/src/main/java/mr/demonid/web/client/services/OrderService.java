@@ -39,8 +39,6 @@ public class OrderService {
     }
 
     public ResponseEntity<?> createOrder(PaymentRequest request) {
-        log.info("-- Creating order with payment: {}", request);
-
         if (request.getPaymentMethodId() == null) {
             throw new CreateOrderException("Выберите платежную систему");
         }
