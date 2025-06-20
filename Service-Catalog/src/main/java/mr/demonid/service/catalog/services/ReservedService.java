@@ -100,7 +100,6 @@ public class ReservedService {
                 }
             }
             productLogService.setStatus(orderId, ReservationStatus.CANCELLED);
-//            productLogService.store(reservedProductEntity, ReservationStatus.CANCELLED);
         }
     }
 
@@ -113,7 +112,6 @@ public class ReservedService {
         if (reservedProductEntity != null) {
             // да собственно больше ничего и не нужно делать, разве что в историю отправить.
             productLogService.setStatus(orderId, ReservationStatus.APPROVED);
-//            productLogService.store(reservedProductEntity, ReservationStatus.APPROVED);
             return reservedProductEntity.stream().map(e -> new ProductTransferred(e.getProductId(), e.getQuantity())).toList();
         }
         return List.of();

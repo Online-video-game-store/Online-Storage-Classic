@@ -46,7 +46,9 @@ public class OrderService {
         OrderCreateRequest order = getOrderCreateRequest(request, userId);
         log.info("-- Order created: {}", order);
         // отсылаем заказ
-        return orderServiceClient.createOrder(order);
+        ResponseEntity<?> res = orderServiceClient.createOrder(order);
+        cartServices.clearCart();
+        return res;
     }
 
 

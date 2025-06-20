@@ -1,7 +1,6 @@
 http://127.0.0.1:9000/pk8000/catalog/index
 
-{"timestamp":"2025-06-17T17:16:38.7121468","status":400,"error":"Bad Request","message":"Пилот [требуется: 29, в наличии: 8]","path":"/pk8000/api/catalog/reservation/reserve"}
-
+TODO: добавить возврат на main из формы оплаты.
 
 Header:
 {
