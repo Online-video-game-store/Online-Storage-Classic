@@ -10,7 +10,6 @@ import mr.demonid.web.client.dto.filters.ProductFilter;
 import mr.demonid.web.client.dto.logs.ProductLogResponse;
 import mr.demonid.web.client.dto.ProductRequest;
 import mr.demonid.web.client.links.ProductServiceClient;
-import mr.demonid.web.client.utils.FeignErrorUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -78,11 +77,7 @@ public class ProductServiceImpl implements ProductServices {
      */
     @Override
     public ResponseEntity<?> createProduct(ProductRequest product) {
-        try {
-            return productServiceClient.createProduct(product);
-        } catch (FeignException e) {
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Catalog-Service");
-        }
+        return productServiceClient.createProduct(product);
     }
 
     /**
@@ -91,20 +86,12 @@ public class ProductServiceImpl implements ProductServices {
      */
     @Override
     public ResponseEntity<?> updateProduct(ProductRequest product) {
-        try {
-            return productServiceClient.updateProduct(product);
-        } catch (FeignException e) {
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Catalog-Service");
-        }
+        return productServiceClient.updateProduct(product);
     }
 
     @Override
     public ResponseEntity<?> deleteProduct(Long productId) {
-        try {
-            return productServiceClient.deleteProduct(productId);
-        } catch (FeignException e) {
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Catalog-Service");
-        }
+        return productServiceClient.deleteProduct(productId);
     }
 
     /**
@@ -116,11 +103,7 @@ public class ProductServiceImpl implements ProductServices {
      */
     @Override
     public ResponseEntity<?> uploadImage(Long productId, MultipartFile file, String replaceFileName) {
-        try {
-            return productServiceClient.uploadImage(productId, file, replaceFileName);
-        } catch (FeignException e) {
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Catalog-Service");
-        }
+        return productServiceClient.uploadImage(productId, file, replaceFileName);
     }
 
     /**
@@ -130,11 +113,7 @@ public class ProductServiceImpl implements ProductServices {
      */
     @Override
     public ResponseEntity<?> deleteImage(Long productId, String fileName) {
-        try {
-            return productServiceClient.deleteImage(productId, fileName);
-        } catch (FeignException e) {
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Catalog-Service");
-        }
+        return productServiceClient.deleteImage(productId, fileName);
     }
 
     /**

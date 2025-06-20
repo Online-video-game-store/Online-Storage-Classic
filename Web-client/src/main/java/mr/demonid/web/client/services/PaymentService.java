@@ -9,7 +9,6 @@ import mr.demonid.web.client.dto.payment.CardResponse;
 import mr.demonid.web.client.dto.payment.CreateCardRequest;
 import mr.demonid.web.client.exceptions.CreateCardException;
 import mr.demonid.web.client.links.PaymentServiceClient;
-import mr.demonid.web.client.utils.FeignErrorUtils;
 import mr.demonid.web.client.utils.IdnUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -55,12 +54,8 @@ public class PaymentService {
         if (userId == null) {
             throw new CreateCardException("Пользователь не авторизирован");
         }
-        try {
-            log.info("-- Adding new card user: {}", userId);
-            return paymentServiceClient.addCard(new CreateCardRequest(userId, cardRequest.getCardNumber(), cardRequest.getExpiryDate(), cardRequest.getCvv()));
-        } catch (FeignException e) {
-            return FeignErrorUtils.toResponse(e, "Ошибка микросервиса Payment-Service");
-        }
+        log.info("-- Adding new card user: {}", userId);
+        return paymentServiceClient.addCard(new CreateCardRequest(userId, cardRequest.getCardNumber(), cardRequest.getExpiryDate(), cardRequest.getCvv()));
     }
 
 
