@@ -28,6 +28,9 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Разрешаем CORS
                 .csrf(AbstractHttpConfigurer::disable)                      // Отключаем CSRF для запросов API
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").hasAnyRole("ADMIN", "DEVELOPER")
+
                         .requestMatchers(HttpMethod.GET, "/pk8000/api/catalog/images/**").permitAll()
                         .requestMatchers("/pk8000/api/catalog/products/**").permitAll()
                         .requestMatchers("/pk8000/api/catalog/edit/**").hasAnyRole("ADMIN", "DEVELOPER")

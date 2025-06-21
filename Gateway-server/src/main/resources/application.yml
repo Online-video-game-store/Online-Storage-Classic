@@ -12,6 +12,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8090     # сервер аутентификации
+          jwk-set-uri: http://localhost:8090/oauth2/jwks
 
   cloud:
     loadbalancer:
@@ -54,6 +55,13 @@ spring:
           filters:
             - Retry=3         # Повторить запрос до 3 раз при сбое
         #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
+
+        - id: actuator-catalog-route
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/CATALOG-SERVICE/actuator/**
+          filters:
+            - StripPrefix=1   # убираем /CATALOG-SERVICE
 
 
 # настройки Эврики
