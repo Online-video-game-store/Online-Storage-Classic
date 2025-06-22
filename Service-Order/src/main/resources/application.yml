@@ -54,6 +54,46 @@ eureka:
     lease-expiration-duration-in-seconds: 10  # Таймаут для истечения lease (сердцебиений) (60)
 
 
+# Actuator. По дефолту доступны только health и info.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus, env, loggers, micrometer
+    access:
+      default: none                   # по дефолту не указанные эндпоинты отключены
+  endpoint:
+    health:
+      access: unrestricted            # разрешаем все методы HTTP (get, post, delete и тд)
+      show-details: when-authorized
+    prometheus:
+      access: read_only
+    info:
+      access: read_only
+    metrics:
+      access: read_only
+    loggers:
+      access: unrestricted
+    env:
+      access: unrestricted
+
+  # разрешаем отображение информации из info-секции файла настроек
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true    # это выведет в info информацию по JVM
+
+info:
+  app:
+    name: "Магазин игрушек для ПК8000 'Сура'"
+    description: "Микросервис 'Заказы'"
+    version: "2.1"
+  developer:
+    name: "Хлус А. А."
+    years: "49"
+
+
 #logging:
 #  level:
 #    org:

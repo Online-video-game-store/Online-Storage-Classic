@@ -77,17 +77,24 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info, metrics, prometheus, env, loggers
+        include: health, info, metrics, prometheus, env, loggers, micrometer
+    access:
+      default: none                   # по дефолту не указанные эндпоинты отключены
   endpoint:
     health:
-      access: unrestricted
+      access: unrestricted            # разрешаем все методы HTTP (get, post, delete и тд)
       show-details: when-authorized
     prometheus:
       access: unrestricted
     info:
-      access: unrestricted
+      access: read_only
     metrics:
+      access: read_only
+    loggers:
       access: unrestricted
+    env:
+      access: unrestricted
+
 
   # разрешаем отображение информации из info-секции файла настроек
   info:

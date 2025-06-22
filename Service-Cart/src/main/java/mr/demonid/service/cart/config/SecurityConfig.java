@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Разрешаем CORS
                 .csrf(AbstractHttpConfigurer::disable)                      // Отключаем CSRF для запросов API
                 .authorizeHttpRequests(authorize -> authorize
+                        // мониторинг
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").access(new WebExpressionAuthorizationManager(
+                                "hasRole('SERVICE') and hasAuthority('SCOPE_actuator:read')"))
+
                         .requestMatchers("/pk8000/api/public/cart/**").permitAll() // к корзине должен быть доступ вообще у всех
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()                       // Остальные требуют аутентификации

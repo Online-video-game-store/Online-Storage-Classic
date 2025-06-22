@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
@@ -35,6 +36,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)                      // Отключаем CSRF для запросов API
                 .authorizeHttpRequests(authorize -> authorize
+                        // мониторинг
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").access(new WebExpressionAuthorizationManager(
+                                "hasRole('SERVICE') and hasAuthority('SCOPE_actuator:read')"))
+
                         .anyRequest().authenticated()
                 )
 //                .httpBasic(Customizer.withDefaults())

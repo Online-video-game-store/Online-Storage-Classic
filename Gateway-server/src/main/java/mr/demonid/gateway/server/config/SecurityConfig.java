@@ -43,6 +43,8 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
                 .authorizeExchange(exchange -> exchange
+                        .pathMatchers("/actuator/health", "/actuator/info").permitAll()
+
                         .pathMatchers(
                                 "/pk8000/api/catalog/products/**",
                                 "/pk8000/api/catalog/images/**",

@@ -56,12 +56,31 @@ spring:
             - Retry=3         # Повторить запрос до 3 раз при сбое
         #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
 
+        # Мониторинг метрик
         - id: actuator-catalog-route
           uri: lb://CATALOG-SERVICE
           predicates:
             - Path=/CATALOG-SERVICE/actuator/**
           filters:
             - StripPrefix=1   # убираем /CATALOG-SERVICE
+        - id: actuator-order-route
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/ORDER-SERVICE/actuator/**
+          filters:
+            - StripPrefix=1   # убираем /ORDER-SERVICE
+        - id: actuator-payment-route
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/PAYMENT-SERVICE/actuator/**
+          filters:
+            - StripPrefix=1   # убираем /PAYMENT-SERVICE
+        - id: actuator-cart-route
+          uri: lb://CART-SERVICE
+          predicates:
+            - Path=/CART-SERVICE/actuator/**
+          filters:
+            - StripPrefix=1   # убираем /CART-SERVICE
 
 
 # настройки Эврики
