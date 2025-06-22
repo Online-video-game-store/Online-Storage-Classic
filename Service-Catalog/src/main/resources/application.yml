@@ -80,11 +80,14 @@ management:
         include: health, info, metrics, prometheus, env, loggers
   endpoint:
     health:
+      access: unrestricted
       show-details: when-authorized
-#    info:
-#      access: unrestricted
-#    prometheus:
-#      access: unrestricted
+    prometheus:
+      access: unrestricted
+    info:
+      access: unrestricted
+    metrics:
+      access: unrestricted
 
   # разрешаем отображение информации из info-секции файла настроек
   info:
@@ -95,9 +98,10 @@ management:
 
 info:
   app:
-    name: "PK8000: magazine of games"
-    description: "Web client for my Spring Boot example"
-    version: "3.1"
+    name: "Магазин игрушек для ПК8000 'Сура'"
+    description: "Микросервис 'Каталог продукции'"
+    version: "2.1"
   developer:
-    name: "Andrey Hlus"
+    name: "Хлус А. А."
     years: "49"
+

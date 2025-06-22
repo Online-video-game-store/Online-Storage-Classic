@@ -108,6 +108,21 @@ public class SecurityConfig {
                         .build()
                 );
             }
+            // Создание клиента для Prometheus
+            if (registeredClientRepository.findByClientId(properties.getPrometheusId()) == null) {
+                registeredClientRepository.save(RegisteredClient
+                        .withId(UUID.randomUUID().toString())
+                        .clientId(properties.getPrometheusId())
+                        .clientSecret(passwordEncoder.encode(properties.getPrometheusSecret()))
+                        .authorizationGrantType(CLIENT_CREDENTIALS)
+                        .scope("actuator:read")
+                        .clientAuthenticationMethod(CLIENT_SECRET_BASIC)
+                        .tokenSettings(TokenSettings.builder()
+                                .accessTokenTimeToLive(Duration.ofMinutes(properties.getPrometheusTime()))  // время действия токена
+                                .build())
+                        .build()
+                );
+            }
         };
     }
 

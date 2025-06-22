@@ -25,4 +25,8 @@ public class AuthorizationProperties {
     private String apmId;
     private String apmSecret;
     private long expirationTime;
+    // id и секрет для Prometheus
+    private String prometheusId;
+    private String prometheusSecret;
+    private long prometheusTime;
 }

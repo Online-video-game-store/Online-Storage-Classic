@@ -26,7 +26,9 @@ spring:
         apm-id: "apmid"             # дефолтное значение client-id для регистрации программы-оператора, работающей без пользователя
         apm-secret: "hren-ugadaesh" # дефолтное значение client-secret для регистрации программы-оператора, работающей без пользователя
         expiration-time: 30         # время валидности токена (минут)
-
+        prometheus-id: "prometheus" # дефолтное значение client-id для регистрации Prometheus
+        prometheus-secret: "secret" # дефолтное значение client-secret для регистрации Prometheus
+        prometheus-time: 60         # время валидности токена (минут)
 
   # SQL database
   datasource:

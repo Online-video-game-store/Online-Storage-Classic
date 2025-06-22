@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 
 @Configuration
@@ -28,9 +29,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Разрешаем CORS
                 .csrf(AbstractHttpConfigurer::disable)                      // Отключаем CSRF для запросов API
                 .authorizeHttpRequests(authorize -> authorize
+                        // мониторинг
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
-                        .requestMatchers("/actuator/**").hasAnyRole("ADMIN", "DEVELOPER")
+                        .requestMatchers("/actuator/**").access(new WebExpressionAuthorizationManager(
+                                "hasRole('SERVICE') and hasAuthority('SCOPE_actuator:read')"))
 
+                        // эндпойнты
                         .requestMatchers(HttpMethod.GET, "/pk8000/api/catalog/images/**").permitAll()
                         .requestMatchers("/pk8000/api/catalog/products/**").permitAll()
                         .requestMatchers("/pk8000/api/catalog/edit/**").hasAnyRole("ADMIN", "DEVELOPER")

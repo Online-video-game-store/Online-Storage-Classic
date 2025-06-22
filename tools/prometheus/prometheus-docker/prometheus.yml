@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'secure-metrics'
+    metrics_path: /CATALOG-SERVICE/actuator/prometheus
+    static_configs:
+      - targets: ['192.168.1.64:9010']  # через Gateway
+    bearer_token_file: /etc/prometheus/token.jwt

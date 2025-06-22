@@ -1,16 +1,5 @@
 http://127.0.0.1:9000/pk8000/catalog/index
 
-## Метрики.
-
-Все метрики, кроме health и info доступны только с ролью `ADMIN`,
-поэтому вызываем их примерно так:
-```shell
-curl -H "Authorization: Bearer $токен$" http://localhost:9010/CATALOG-SERVICE/actuator/metrics
-```
-То есть через Gateway и с действующим Jwt-токеном админа.
-
-Ответ на такой запрос находится в файле `metrics.json`.
-
 
 
 Header:

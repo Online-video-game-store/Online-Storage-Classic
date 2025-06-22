@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  prometheus:
+    build: .
+    container_name: prometheus-osc
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped

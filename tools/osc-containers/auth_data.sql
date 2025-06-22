@@ -11,7 +11,8 @@ insert IGNORE into scopes (name, description)
 values ( 'read', null ),
        ('write', null),
        ('update', 'только для админов'),
-       ('delete', 'только для админов');
+       ('delete', 'только для админов'),
+       ('actuator:read', 'для Prometheus');
 
 
 insert IGNORE into users (user_id, username, password, email, enabled)
