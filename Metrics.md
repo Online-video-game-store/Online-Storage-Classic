@@ -16,7 +16,9 @@ curl -H "Authorization: Bearer $токен$" http://localhost:9010/CATALOG-SERVI
 
 Для удобного мониторинга подключим `Прометей`, через который можно задействовать удобные средства просмотра.
 
-В папке `tools/prometheus/prometheus-docker`:
+В папке `tools/prometheus/osc-prometheus-containers`:
+
+Сначала в `.env.prometheus` задаем адрес сервера авторизации. И затем собираем контейнер:
 
 ```shell
 docker-compose up -d --build

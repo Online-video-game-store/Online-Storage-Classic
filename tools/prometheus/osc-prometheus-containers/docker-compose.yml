@@ -10,6 +10,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     restart: unless-stopped
+    env_file:
+      - .env.prometheus
 
   grafana:
     image: grafana/grafana-oss:latest
