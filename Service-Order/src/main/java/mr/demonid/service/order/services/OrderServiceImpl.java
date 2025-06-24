@@ -2,13 +2,12 @@ package mr.demonid.service.order.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import mr.demonid.osc.commons.dto.cart.CartItemResponse;
 import mr.demonid.osc.commons.dto.catalog.ProductResponse;
 import mr.demonid.osc.commons.dto.order.OrderCreateRequest;
 import mr.demonid.osc.commons.dto.order.filter.OrderFilter;
 import mr.demonid.service.order.domain.Order;
-import mr.demonid.service.order.domain.OrderStatus;
 import mr.demonid.service.order.dto.OrderResponse;
+import mr.demonid.service.order.events.OrderPublisher;
 import mr.demonid.service.order.exceptions.CreateOrderException;
 import mr.demonid.service.order.links.CatalogServiceClient;
 import mr.demonid.service.order.links.PaymentServiceClient;
@@ -32,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
     private CatalogServiceClient catalogServiceClient;
     private PaymentServiceClient paymentServiceClient;
+    private OrderPublisher orderPublisher;
 
 
     @Override
@@ -58,11 +58,11 @@ public class OrderServiceImpl implements OrderService {
 
         // Задаем последовательность действий.
         SagaOrchestrator<SagaContext> orchestrator = new SagaOrchestrator<>();
-        orchestrator.addStep(new CreateOrderStep(orderRepository, catalogServiceClient));   // Шаг 1. Открываем заказ
+        orchestrator.addStep(new CreateOrderStep(orderRepository, orderPublisher));   // Шаг 1. Открываем заказ
         orchestrator.addStep(new ProductReservationStep(catalogServiceClient));             // Шаг 2. Резервируем товар
         orchestrator.addStep(new PaymentTransferStep(paymentServiceClient));        // Списываем средства в пользу магазина
         orchestrator.addStep(new ApprovedStep(orderRepository, catalogServiceClient)); // завершение сделки
-//        orchestrator.addStep(new InformationStep(informationService));                                // оповещаем пользователя
+        orchestrator.addStep(new InformationStep(orderPublisher));                                // оповещаем пользователя
 
         // Запускаем выполнение и возвращаем результат.
         orchestrator.execute(context);

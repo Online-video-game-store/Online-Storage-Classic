@@ -13,6 +13,39 @@ spring:
         jwt:
           issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8090} # сервер аутентификации
 
+
+  # Cloud Bus + RabbitMQ
+  cloud:
+    stream:
+      default-binder: rabbit
+      bindings:
+        # Выходные каналы
+        ch-pk8000-order-out:
+          destination: pk8000.order.exchange  # exchange (обменник)
+          content-type: application/json
+        ch-pk8000-cancel-out:
+          destination: pk8000.cancel.exchange
+          content-type: application/json
+      rabbit:
+        bindings:
+          # Выходные каналы
+          ch-pk8000-order-out:
+            producer:
+              exchange-type: direct
+              declare-exchange: true
+              routing-key-expression: "headers['routingKey']"
+          ch-pk8000-cancel-out:
+            producer:
+              exchange-type: direct
+              declare-exchange: true
+              routing-key-expression: "headers['routingKey']"
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+
   # SQL database
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

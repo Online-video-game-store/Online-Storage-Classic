@@ -2,11 +2,12 @@ package mr.demonid.service.order.saga;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.events.OrderFailEvent;
 import mr.demonid.service.order.domain.Order;
 import mr.demonid.service.order.domain.OrderStatus;
 import mr.demonid.service.order.exceptions.SagaStepException;
-import mr.demonid.service.order.links.CatalogServiceClient;
 import mr.demonid.service.order.repository.OrderRepository;
+import mr.demonid.service.order.events.OrderPublisher;
 
 
 /**
@@ -17,7 +18,7 @@ import mr.demonid.service.order.repository.OrderRepository;
 public class CreateOrderStep implements SagaStep<SagaContext> {
 
     private final OrderRepository orderRepository;
-    private final CatalogServiceClient catalogServiceClient;
+    private final OrderPublisher orderPublisher;
 
 
     @Override
@@ -48,9 +49,12 @@ public class CreateOrderStep implements SagaStep<SagaContext> {
                 order.setStatus(OrderStatus.Cancelled);
                 orderRepository.save(order);
             }
-            context.setOrderId(null);
         }
-//        informationService.sendMessage("Заказ отменен. Попробуйте попозже.");
+        orderPublisher.sendFailOrderEvent(new OrderFailEvent(
+                context.getOrderId(),
+                "Заказ отменен. Попробуйте попозже.")
+        );
+        context.setOrderId(null);
     }
 
 

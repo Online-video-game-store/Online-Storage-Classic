@@ -32,6 +32,53 @@ spring:
             scope:
               - openid
 
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8090} # сервер аутентификации
+
+
+  # Cloud Bus + RabbitMQ
+  cloud:
+    function:
+      definition: channelOrderEvents;channelOrderCancel
+    stream:
+      default-binder: rabbit
+      function:
+        bindings:
+          channelOrderEvents-in-0: ch-pk8000-order-in
+          channelOrderCancel-in-0: ch-pk8000-cancel-in
+      bindings:
+        # Входные каналы
+        ch-pk8000-order-in:
+          destination: pk8000.order.exchange
+          group: ${spring.application.name}-orders-group
+          content-type: application/json
+        ch-pk8000-cancel-in:
+          destination: pk8000.cancel.exchange
+          group: ${spring.application.name}-orders-group
+          content-type: application/json
+      rabbit:
+        bindings:
+          # Входные каналы
+          ch-pk8000-order-in:
+            consumer:
+              exchange-type: direct
+              declare-exchange: true
+              auto-bind-dlq: true
+              binding-routing-key: "order.done"
+          ch-pk8000-cancel-in:
+            consumer:
+              exchange-type: direct
+              declare-exchange: true
+              auto-bind-dlq: true
+              binding-routing-key: "order.fail"
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+
 # Настройки приложения
 app:
   config:

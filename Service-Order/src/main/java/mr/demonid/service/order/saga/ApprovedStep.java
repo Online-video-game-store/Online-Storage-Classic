@@ -43,10 +43,6 @@ public class ApprovedStep implements SagaStep<SagaContext> {
 
     @Override
     public void rollback(SagaContext context) {
-        // Если после подтверждения резерва делать небольшую паузу, то
-        // этот метод вполне сработает.
-        // Ну или отменять резерв забирая товар уже у службы доставки,
-        // тут все от реализации зависит, а здесь это не важно.
         log.error("ApprovedStep.rollback()");
         try {
             catalogServiceClient.unblock(context.getOrderId());
