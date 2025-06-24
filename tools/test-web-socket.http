@@ -1,0 +1,10 @@
+# Должно вернуть: HTTP/1.1 200 OK
+GET http://192.168.1.64:9000/ws/notifications
+
+{
+    "Upgrade": "websocket"
+    "Host": "192.168.1.64:9000"
+    "Origin": "http://192.168.1.64:5173"
+    "Sec-WebSocket-Key": "x3JJHMbDL1EzLkh9GBhXDw=="
+    "Sec-WebSocket-Version": 13
+}
