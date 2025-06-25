@@ -1,18 +1,17 @@
-package mr.demonid.web.client.services.events;
+package mr.demonid.notification.service.service;
 
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.notification.service.domain.NotifyType;
+import mr.demonid.notification.service.service.events.JwtService;
+import mr.demonid.notification.service.service.events.MessageMapper;
+import mr.demonid.notification.service.service.events.TokenTool;
 import mr.demonid.osc.commons.events.OrderDoneEvent;
 import mr.demonid.osc.commons.events.OrderFailEvent;
-import mr.demonid.web.client.utils.IdnUtil;
 import org.springframework.messaging.Message;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -23,9 +22,9 @@ public class EventsService {
     private JwtService jwtService;
     private TokenTool tokenTool;
     private MessageMapper messageMapper;
-    private IdnUtil idnUtil;
 
-    private WebSocketService webSocketService;
+    private NotifyService notifyService;
+
 
 
     public void doProcess(Message<Object> message) {
@@ -59,25 +58,17 @@ public class EventsService {
      */
     private void finishOrder(OrderDoneEvent event)
     {
-        // информируем юзера
-        UUID userId = idnUtil.getUserId();
-        CompletableFuture.runAsync(() ->
-                        webSocketService.sendMessage(userId, event.getMessage()),
-                CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS)
-        );
+        log.info("-- order notification successes: {}", event);
+        notifyService.broadcast(NotifyType.INFO, event.getOrderId(), event.getMessage());
     }
 
     /*
     Заказ завершился ошибкой.
     */
     private void failOrder(OrderFailEvent event) {
-        log.error("-- order {} cancelled", event);
-        UUID userId = idnUtil.getUserId();
-        CompletableFuture.runAsync(() ->
-                webSocketService.sendMessage(userId, "Ошибка формирования заказа: " + event.getMessage()),
-                CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS)
-        );
-
+        log.error("-- order notification failed: {}", event);
+        notifyService.broadcast(NotifyType.ERROR, event.getOrderId(), event.getMessage());
     }
+
 
 }

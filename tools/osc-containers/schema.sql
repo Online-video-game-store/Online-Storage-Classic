@@ -38,3 +38,12 @@ CREATE TABLE payment_method (
     name VARCHAR(255) NOT NULL,
     supports_cards BOOLEAN NOT NULL
 );
+
+
+USE notify_db;
+
+CREATE TABLE notify_target_email (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id binary(16) NOT NULL,
+    email VARCHAR(255) NOT NULL
+);

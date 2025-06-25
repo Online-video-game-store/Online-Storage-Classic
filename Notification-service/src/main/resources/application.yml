@@ -1,0 +1,108 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: "NOTIFICATION-SERVICE"
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8090} # сервер аутентификации
+
+
+  # Cloud Bus + RabbitMQ
+  cloud:
+    function:
+      definition: channelOrderEvents;channelOrderCancel
+    stream:
+      default-binder: rabbit
+      function:
+        bindings:
+          channelOrderEvents-in-0: ch-pk8000-order-in
+          channelOrderCancel-in-0: ch-pk8000-cancel-in
+      bindings:
+        # Входные каналы
+        ch-pk8000-order-in:
+          destination: pk8000.order.exchange
+          group: ${spring.application.name}-orders-group
+          content-type: application/json
+        ch-pk8000-cancel-in:
+          destination: pk8000.cancel.exchange
+          group: ${spring.application.name}-orders-group
+          content-type: application/json
+      rabbit:
+        bindings:
+          # Входные каналы
+          ch-pk8000-order-in:
+            consumer:
+              exchange-type: direct
+              declare-exchange: true
+              auto-bind-dlq: true
+              binding-routing-key: "order.done"
+          ch-pk8000-cancel-in:
+            consumer:
+              exchange-type: direct
+              declare-exchange: true
+              auto-bind-dlq: true
+              binding-routing-key: "order.fail"
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+
+  # SQL database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/notify_db
+    username: admin
+    password: admin
+  # Spring Jpa Hibernate
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: false
+        format_sql: true
+        highlight_sql: true
+
+    generate-ddl: true
+    defer-datasource-initialization: true
+    open-in-view: false
+  # автозапуск скриптов 'schema.sql' и 'data.sql'
+  sql:
+    init:
+      mode: never           # не нужен
+  #      mode: always
+  #      schema-locations: classpath:schema.sql
+
+
+  # e-mail
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: andrey.nemo.an@gmail.com
+    password: ${GMAIL_PASSWORD}
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+#        debug: true
+
+
+# Настройки приложения
+app:
+  config:
+    claim-user-id: ${USER-ID-CLAIM:user_id}     # поле в токене, хранящее ID пользователя

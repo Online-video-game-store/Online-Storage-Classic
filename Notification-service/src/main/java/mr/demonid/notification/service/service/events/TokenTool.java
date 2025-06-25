@@ -1,4 +1,4 @@
-package mr.demonid.web.client.services.events;
+package mr.demonid.notification.service.service.events;
 
 import com.rabbitmq.client.LongString;
 import lombok.extern.log4j.Log4j2;

@@ -1,4 +1,4 @@
-package mr.demonid.web.client.services.events;
+package mr.demonid.notification.service.service.events;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

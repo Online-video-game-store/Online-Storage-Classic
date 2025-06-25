@@ -164,3 +164,12 @@ INSERT INTO payment_method (name, supports_cards) VALUES
     ('PayPal', false),
     ('SberPay', false),
     ('Быстрый платеж', false);
+
+
+USE notify_db;
+
+INSERT INTO notify_target_email (user_id, email) VALUES
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 'andnot@yandex.ru'),
+    (UNHEX('fc7559f37b924cc380512267b77fb6e5'), 'mrdemonid@yandex.ru'),
+    (UNHEX('f4a89cf05a704f558e6915f7ae8547d3'), 'ndrey7@rambler.ru')
+;

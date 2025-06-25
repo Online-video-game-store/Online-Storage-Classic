@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
@@ -13,6 +14,7 @@
         <option value="$PROJECT_DIR$/Gateway-server/pom.xml" />
         <option value="$PROJECT_DIR$/Service-Order/pom.xml" />
         <option value="$PROJECT_DIR$/Service-Payment/pom.xml" />
+        <option value="$PROJECT_DIR$/Notification-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

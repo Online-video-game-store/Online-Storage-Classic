@@ -1,4 +1,4 @@
-package mr.demonid.web.client.services.events;
+package mr.demonid.notification.service.service.events;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;

@@ -17,6 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class OrderDoneEvent {
     private UUID orderId;
+    private UUID userId;
     private String message;
-    private List<CartItemResponse> items;
 }

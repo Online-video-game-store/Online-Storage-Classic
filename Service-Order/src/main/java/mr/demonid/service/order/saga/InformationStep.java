@@ -20,8 +20,8 @@ public class InformationStep implements SagaStep<SagaContext> {
     public void execute(SagaContext context) throws SagaStepException {
         publisher.sendFinishOrderEvent(new OrderDoneEvent(
                 context.getOrderId(),
-                "Покупка совершена. Ваш заказ передан в службу доставки.",
-                context.getItems().stream().map(e -> new CartItemResponse(e.getProductId(), e.getQuantity())).toList())
+                context.getUserId(),
+                "Покупка совершена. Ваш заказ передан в службу доставки.")
         );
     }
 

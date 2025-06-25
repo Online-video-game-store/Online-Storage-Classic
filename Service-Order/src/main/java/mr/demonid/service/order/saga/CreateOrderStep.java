@@ -2,6 +2,7 @@ package mr.demonid.service.order.saga;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import mr.demonid.osc.commons.dto.cart.CartItemResponse;
 import mr.demonid.osc.commons.events.OrderFailEvent;
 import mr.demonid.service.order.domain.Order;
 import mr.demonid.service.order.domain.OrderStatus;
@@ -52,6 +53,7 @@ public class CreateOrderStep implements SagaStep<SagaContext> {
         }
         orderPublisher.sendFailOrderEvent(new OrderFailEvent(
                 context.getOrderId(),
+                context.getUserId(),
                 "Заказ отменен. Попробуйте попозже.")
         );
         context.setOrderId(null);
