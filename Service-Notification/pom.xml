@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>mr.demonid</groupId>
-    <artifactId>notification-service</artifactId>
+    <artifactId>service-notification</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Notification-service</name>
-    <description>Notification-service</description>
+    <name>Service-Notification</name>
+    <description>Service-Notification</description>
     <url/>
     <licenses>
         <license/>

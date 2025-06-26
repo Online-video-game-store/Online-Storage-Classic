@@ -30,7 +30,7 @@ public class NotifyEmail {
         targets.forEach(e -> {
             log.info("-- send to {}, subj: {}, message: {}", e.getEmail(), "Information on order", text);
 // TODO: раскомментировать в окончательной редакции.
-//            emailService.sendEmail(e.getEmail(), "Information on order", text);
+            emailService.sendEmail(e.getEmail(), "Information on order", text);
         });
     }
 

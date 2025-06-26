@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="osc-commons" />
+        <module name="service-notification" />
         <module name="service-cart" />
         <module name="service-catalog" />
         <module name="web-client" />
@@ -15,7 +16,6 @@
         <module name="gateway-server" />
         <module name="service-order" />
         <module name="eureka-server" />
-        <module name="notification-service" />
         <module name="service-payment" />
       </profile>
     </annotationProcessing>
@@ -29,9 +29,9 @@
       <module name="auth-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="gateway-server" options="-parameters" />
-      <module name="notification-service" options="-parameters" />
       <module name="service-cart" options="-parameters" />
       <module name="service-catalog" options="-parameters" />
+      <module name="service-notification" options="-parameters" />
       <module name="service-order" options="-parameters" />
       <module name="service-payment" options="-parameters" />
       <module name="web-client" options="-parameters" />
