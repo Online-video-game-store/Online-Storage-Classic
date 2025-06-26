@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: ${NOTIFICATION_SERVICE_PORT:0}
 
 spring:
   application:
@@ -90,7 +90,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: andrey.nemo.an@gmail.com
-    password: ${GMAIL_PASSWORD}
+    password: ${app.config.email-password}
     protocol: smtp
     properties:
       mail:
@@ -105,4 +105,5 @@ spring:
 # Настройки приложения
 app:
   config:
-    claim-user-id: ${USER-ID-CLAIM:user_id}     # поле в токене, хранящее ID пользователя
+    claim-user-id: ${USER_ID_CLAIM:user_id}     # поле в токене, хранящее ID пользователя
+    email-password: ${GMAIL_PASSWORD:}

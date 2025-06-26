@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app.config")
 public class AppConfiguration {
     private String claimUserId;
+    private String emailPassword;
 }

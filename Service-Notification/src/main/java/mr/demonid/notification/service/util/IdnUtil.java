@@ -44,44 +44,4 @@ public class IdnUtil {
         return authentication == null ? null : authentication.getName();
     }
 
-
-    public Cookie getCookie(String name, Cookie[] cookies) {
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (name.equals(cookie.getName())) {
-                    return cookie;
-                }
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * Возвращает Jwt-токен текущего пользователя.
-     *
-     * @return Строка токена, или null - если пользователь не аутентифицирован.
-     */
-    public String getCurrentUserToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JwtAuthenticationToken jwtToken) {
-            return jwtToken.getToken().getTokenValue();
-        } else if (authentication.getPrincipal() instanceof DefaultOidcUser oidcUser) {
-            return oidcUser.getIdToken().getTokenValue();
-        }
-        return null;
-    }
-
-    /**
-     * Возвращает список прав текущего пользователя.
-     */
-    public List<String> getCurrentUserAuthorities() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return List.of();
-        }
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-    }
 }

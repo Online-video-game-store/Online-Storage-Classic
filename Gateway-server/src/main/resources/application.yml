@@ -32,7 +32,7 @@ spring:
           predicates:
             - Path=/pk8000/api/catalog/**
           filters:
-            - Retry=3         # Повторить запрос до 5 раз при сбое
+            - Retry=3         # Повторить запрос до 3 раз при сбое
         #            - RemoveRequestHeader=Authorization   # удаляем исходный токен
         - id: cart-service
           uri: lb://CART-SERVICE

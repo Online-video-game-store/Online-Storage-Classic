@@ -44,16 +44,4 @@ public class Converts {
         );
     }
 
-    public static Order dtoToOrder(OrderResponse dto) {
-        return Order.builder()
-                .orderId(dto.getOrderId())
-                .userId(dto.getUserId())
-                .paymentId(dto.getPaymentId())
-                .cardId(dto.getCardId())
-                .createdAt(dto.getCreatedAt())
-                .totalAmount(dto.getTotalAmount())
-                .status(dto.getStatus())
-                .build();
-    }
-
 }

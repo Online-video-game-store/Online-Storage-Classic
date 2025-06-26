@@ -1,5 +1,8 @@
 package mr.demonid.notification.service.service;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import mr.demonid.notification.service.config.AppConfiguration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -8,20 +11,14 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
+@AllArgsConstructor
+@Log4j2
 public class EmailService {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
-
     private final JavaMailSender mailSender;
-
-
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private AppConfiguration config;
 
 
     /**
@@ -33,6 +30,9 @@ public class EmailService {
     @Async
     public void sendEmail(String to, String subject, String text) {
         try {
+            if (config.getEmailPassword().isBlank()) {
+                throw new MessagingException("Не задан ключ для доступа к mail API");
+            }
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(to);
@@ -44,4 +44,5 @@ public class EmailService {
             log.error("Ошибка при отправке письма: {}", e.getMessage());
         }
     }
+
 }
